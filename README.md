@@ -113,3 +113,25 @@ The project is already configured with:
 - Output Directory: `.output/public`
 
 These settings are defined in the `vercel.json` file.
+
+### Automated Deployment with GitHub Actions
+
+This project includes a GitHub Actions workflow that automatically deploys to Vercel when changes are pushed to the main branch.
+
+To set up automated deployment:
+
+1. In your GitHub repository, go to Settings > Secrets and variables > Actions
+2. Add the following repository secrets:
+   - `VERCEL_TOKEN`: Your Vercel personal access token (create at https://vercel.com/account/tokens)
+   - `VERCEL_PROJECT_ID`: Your Vercel project ID
+   - `VERCEL_ORG_ID`: Your Vercel organization ID
+   - `NUXT_GEMINI_API_KEY`: Your Google Gemini API key
+
+To find your Vercel project ID and organization ID, run:
+
+```bash
+vercel project ls
+vercel whoami
+```
+
+Or check the `.vercel/project.json` file after running `vercel` once locally.
