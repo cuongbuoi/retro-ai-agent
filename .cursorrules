@@ -1,0 +1,53 @@
+# Cursor Rules for Retro AI Agent Assistant
+
+# Project Context
+
+- Always read the Memory Bank files before starting any task
+- Memory Bank files are located in the memory-bank/ directory
+- The project is a Nuxt.js application with TypeScript and Vue 3
+
+# Coding Standards
+
+- Follow existing code style and patterns
+- Use TypeScript types for all new code
+- Maintain the retro pixel art styling for UI elements
+- Add appropriate comments for complex logic
+
+# Agent System
+
+- Each agent should have a consistent personality
+- Keep agent prompts in their respective files in the agents/ directory
+- Follow the existing format when adding new agents
+- Register new agents in agents/index.ts
+
+# UI Components
+
+- Keep UI components modular and reusable
+- Follow the existing component structure
+- Use TailwindCSS for styling
+- Maintain pixel art styling for visual consistency
+
+# API Integration
+
+- Keep API keys secure in environment variables
+- Handle errors gracefully
+- Implement proper loading states
+- Use streaming responses where appropriate
+
+# Testing
+
+- Write unit tests for critical components
+- Test edge cases and error scenarios
+- Ensure multilingual support works correctly
+
+# Performance
+
+- Optimize for performance, especially for streaming responses
+- Minimize API calls where possible
+- Consider caching strategies for frequent requests
+
+# Documentation
+
+- Update Memory Bank files when making significant changes
+- Document new features and components
+- Keep README.md up to date with setup instructions
