@@ -1,0 +1,57 @@
+### API Test Request (Chat)
+POST https://api.openai.com/v1/chat/completions
+Content-Type: application/json
+Authorization: Bearer {{$dotenv NUXT_OPENAI_API_KEY}}
+
+{
+  "model": "gpt-3.5-turbo",
+  "messages": [
+    {
+      "role": "system", 
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "What's the weather like in Paris?"
+    }
+  ],
+  "temperature": 0.7,
+  "top_p": 1,
+  "n": 1,
+  "stream": false,
+  "max_tokens": 60,
+  "presence_penalty": 0,
+  "frequency_penalty": 0,
+  "user": "user123"
+}
+
+### Test our API endpoint 
+POST http://localhost:6868/api/ai
+Content-Type: application/json
+
+{
+  "messages": [
+    {
+      "role": "system", 
+      "content": "You are a helpful assistant."
+    },
+    {
+      "role": "user",
+      "content": "What's the weather like in Paris?"
+    }
+  ],
+  "agent": "customerSupport"
+}
+
+### Google Gemini API Test (Direct)
+POST https://generativelanguage.googleapis.com/v1beta/openai/chat/completions
+Content-Type: application/json
+Authorization: Bearer {{$dotenv NUXT_GEMINI_API_KEY}}
+
+{
+    "model": "gemini-2.0-flash",
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "What's the weather like in Paris?"}
+    ]
+}

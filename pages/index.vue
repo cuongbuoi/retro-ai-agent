@@ -1,0 +1,41 @@
+<template>
+  <div class="h-screen w-screen flex flex-col overflow-hidden">
+    <div class="pixel-header py-2 bg-pink-600 border-b-4 border-black">
+      <div class="flex items-center justify-center">
+        <img src="/images/logo.png" alt="logo" class="w-10 h-10 mr-2" />
+        <h1 class="pixel-title text-2xl text-center !mb-1">Retro AI Agent Chatbot</h1>
+      </div>
+    </div>
+
+    <div class="flex-1 flex overflow-hidden">
+      <ChatWidget class="flex-1" agent="frontendDeveloperAgent" />
+    </div>
+
+    <div class="pixel-footer py-2 px-4 bg-pink-600 border-t-4 border-black flex items-center justify-between">
+      <span class="text-white text-sm">Pixel UI Demo</span>
+      <NuxtLink to="/pixel-buttons">
+        <PixelButton text="Pixel Buttons" color="pink" />
+      </NuxtLink>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.pixel-header {
+  position: relative;
+  box-shadow: 0 4px 0 rgba(219, 39, 119, 0.3);
+  z-index: 10;
+}
+
+.pixel-footer {
+  position: relative;
+  box-shadow: 0 -4px 0 rgba(219, 39, 119, 0.3);
+  z-index: 10;
+}
+
+.pixel-title {
+  color: white;
+  text-shadow: 2px 2px 0 #9d174d;
+  letter-spacing: 1px;
+}
+</style>
