@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   // Revert to client-side rendering
   ssr: false,
   nitro: {
-    preset: 'vercel-edge',
+    preset: 'netlify-edge',
   },
   routeRules: {
     // API routes must use SSR even with client-side app
