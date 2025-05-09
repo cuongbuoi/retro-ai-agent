@@ -17,6 +17,7 @@ const selectedAgent = ref('frontendDeveloperAgent')
           >
             <option value="frontendDeveloperAgent">Frontend Developer</option>
             <option value="backendDeveloperAgent">Backend Developer</option>
+            <option value="productManagerAgent">Product Manager</option>
           </select>
         </div>
       </div>
