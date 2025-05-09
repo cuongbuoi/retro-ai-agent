@@ -53,7 +53,7 @@
       <div class="mt-10">
         <h2 class="text-xl font-bold text-white mb-4 font-['SVN-Retron']">Button Actions</h2>
         <div class="bg-gray-800 p-4 rounded-lg">
-          <pre class="text-gray-300 font-mono text-sm" id="action-log">Click buttons to see actions here...</pre>
+          <pre class="text-gray-300 font-mono text-sm" ref="actionLogElement">Click buttons to see actions here...</pre>
         </div>
       </div>
     </div>
@@ -64,6 +64,7 @@
 import { ref, onMounted } from 'vue'
 
 const actionLog = ref<string[]>([])
+const actionLogElement = ref<HTMLElement | null>(null)
 
 const handleClick = (action: string) => {
   const timestamp = new Date().toLocaleTimeString()
@@ -84,9 +85,8 @@ const handleHeartUnlike = () => {
 }
 
 const updateActionLog = () => {
-  const logElement = document.getElementById('action-log')
-  if (logElement) {
-    logElement.textContent = actionLog.value.slice(-5).join('\n')
+  if (actionLogElement.value) {
+    actionLogElement.value.textContent = actionLog.value.slice(-5).join('\n')
   }
 }
 
