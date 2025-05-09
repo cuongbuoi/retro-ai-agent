@@ -8,6 +8,11 @@ import { getQuery, readBody, setResponseHeaders } from 'h3'
 interface Message {
   role: string
   content: string
+  fileAttachments?: Array<{
+    name: string
+    type: string
+    content: string
+  }>
 }
 
 interface SSEResponse {
@@ -15,6 +20,25 @@ interface SSEResponse {
   content?: string
   error?: string
   message?: any
+}
+
+// AI Content Types
+interface TextPart {
+  text: string
+}
+
+interface InlineDataPart {
+  inlineData: {
+    data: string
+    mimeType: string
+  }
+}
+
+type ContentPart = TextPart | InlineDataPart
+
+interface AIContent {
+  role: string
+  parts: ContentPart[]
 }
 
 // Constants
@@ -51,9 +75,12 @@ export default defineEventHandler(async (event) => {
     const agentConfig = getAgentConfig(agentName, body)
     const prompt = buildPrompt(body.messages || [], agentConfig.messages)
 
+    // Process files if present
+    const contents = await prepareAIContents(prompt, body.messages)
+
     // Begin streaming response
     sendSSE(response, { type: 'start' })
-    await streamResponse(aiClient, prompt, response, isVercel)
+    await streamResponse(aiClient, contents, response, isVercel)
 
     response.end()
   } catch (error: any) {
@@ -69,6 +96,44 @@ export default defineEventHandler(async (event) => {
 function initializeAIClient() {
   const { GEMINI_API_KEY } = useRuntimeConfig()
   return new GoogleGenAI({ apiKey: GEMINI_API_KEY })
+}
+
+/**
+ * Prepare AI contents with prompt and file parts
+ */
+async function prepareAIContents(prompt: string, messages: Message[] = []): Promise<AIContent[]> {
+  // Standard text-only prompt
+  const contents: AIContent[] = [{ role: 'user', parts: [{ text: prompt }] }]
+
+  // Check for file attachments in the last message
+  const lastMessage = messages[messages.length - 1]
+  if (lastMessage?.fileAttachments?.length) {
+    // Create a parts array with both text and file data
+    const parts: ContentPart[] = [{ text: prompt }]
+
+    // Add each file as a part
+    for (const file of lastMessage.fileAttachments) {
+      if (file.type.startsWith('image/')) {
+        // Handle image files
+        parts.push({
+          inlineData: {
+            data: file.content.toString().replace(/^data:image\/\w+;base64,/, ''),
+            mimeType: file.type,
+          },
+        })
+      } else if (file.type === 'application/pdf' || file.type.startsWith('text/')) {
+        // Handle text files - add file content to prompt
+        parts.push({
+          text: `\n\nFile: ${file.name}\nContent:\n${file.content}`,
+        })
+      }
+    }
+
+    // Replace contents with the new parts array
+    contents[0].parts = parts
+  }
+
+  return contents
 }
 
 /**
@@ -154,11 +219,11 @@ function buildPrompt(messages: Message[], agentMessages?: Message[]): string {
 /**
  * Stream response from the AI model
  */
-async function streamResponse(ai: any, prompt: string, response: any, isVercel: boolean) {
+async function streamResponse(ai: any, contents: AIContent[], response: any, isVercel: boolean) {
   try {
     const streamingResponse = await ai.models.generateContentStream({
       model: MODEL_NAME,
-      contents: prompt,
+      contents: contents,
     })
 
     let fullText = ''

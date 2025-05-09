@@ -1,93 +1,163 @@
 # System Patterns
 
-## Architecture Overview
+## Overall Architecture
 
-The Retro AI Agent Assistant is built on a Nuxt.js framework with a client-server architecture. The frontend handles UI rendering and user interactions, while server-side API routes communicate with the Google Gemini API for AI responses.
+The application follows a client-server architecture using Nuxt.js as the framework. The frontend is built with Vue 3 and TypeScript, with TailwindCSS for styling. The backend is a minimal Nuxt API server that handles communication with external AI services.
 
 ```mermaid
-flowchart TD
-    UI[User Interface] --> Selection[Agent Selection]
-    UI --> Conversation[Conversation Interface]
-    Selection --> AgentSystem[Agent System]
-    Conversation --> Messaging[Message Handler]
-    Messaging --> AgentSystem
-    AgentSystem --> API[Server API Routes]
-    API --> GeminiAPI[Google Gemini API]
-    GeminiAPI --> API
-    API --> AgentSystem
-    AgentSystem --> Messaging
+flowchart TB
+    Client[Client Browser] <--> NuxtServer[Nuxt Server]
+    NuxtServer <--> AIService[Google Gemini API]
 ```
 
-## Core Components
+## Component Architecture
 
-1. **Agent System**: Manages different AI agent personalities and their specialized knowledge
-2. **Conversation Interface**: Handles user messages and displays AI responses
-3. **Server API Integration**: Communicates with the Gemini API and processes responses
+The application follows a component-based architecture with Vue 3 Composition API.
 
-## Key Design Patterns
-
-### 1. Agent Pattern
-
-The system uses an agent-based approach where each agent has:
-
-- A specialized knowledge domain
-- Personality traits
-- System instructions
-- Training examples
-
-This pattern allows for easy extension with new agent types while maintaining consistent interface.
-
-### 2. Streaming Response Pattern
-
-Responses from the AI are streamed to the user in real-time:
-
-1. User sends a message
-2. Request is sent to the API
-3. Responses are streamed back as they're generated
-4. UI updates incrementally as chunks arrive
-
-### 3. Component-Based UI
-
-The UI is built using Vue components with clear separation of concerns:
-
-- `ChatWidget`: Main container for the chat interface
-- `ChatBox`: Handles message display and input
-- Nested components for specific UI elements
-
-### 4. State Management
-
-The application uses Vue's reactive state management to handle:
-
-- User and AI messages
-- Currently selected agent
-- Streaming message state
-- Typing indicators
-
-## File Structure Patterns
-
-```
-agents/                 # Agent definitions and system prompts
-  ├── index.ts          # Agent type definitions and utilities
-  ├── frontendDeveloperAgent.ts
-  ├── backendDeveloperAgent.ts
-  └── productManagerAgent.ts
-
-components/             # UI components
-  ├── ChatWidget/       # Main chat interface components
-  └── ... (other UI components)
-
-pages/                  # Application pages/routes
-  └── index.vue         # Main application page
-
-server/                 # Server-side code
-  └── api/              # API routes for AI communication
-     └── ai.ts          # Gemini API integration
+```mermaid
+flowchart TB
+    App[App.vue] --> ChatWidget[ChatWidget.vue]
+    ChatWidget --> ChatBox[ChatBox.vue]
+    ChatBox --> ChatBubble[ChatBubble.vue]
+    ChatBox --> PixelButton[PixelButton.vue]
 ```
 
-## Extension Patterns
+- **App.vue**: Main application container
+- **ChatWidget.vue**: Manages chat state and API communication
+- **ChatBox.vue**: UI container for messages and input
+- **ChatBubble.vue**: Individual message display
+- **PixelButton.vue**: Reusable button component with pixel styling
 
-The system is designed for extensibility in the following ways:
+## Agent System
 
-1. **Adding new agents**: Create a new agent file in the `agents` directory and register it in `agents/index.ts`
-2. **Extending UI**: Add new components or modify existing ones in the `components` directory
-3. **Adding features**: Implement new functionality by extending the core components and server API
+The application uses a flexible agent system that allows for different AI personalities and specializations.
+
+```mermaid
+flowchart LR
+    AgentIndex[agents/index.ts] --> Agent1[frontendDeveloperAgent.ts]
+    AgentIndex --> Agent2[debuggingAgent.ts]
+    AgentIndex --> Agent3[backendDeveloperAgent.ts]
+```
+
+Agents are defined with customizable system prompts and can be selected at runtime, allowing the application to serve different use cases with the same core functionality.
+
+## API Communication Pattern
+
+The application uses a streaming Server-Sent Events (SSE) pattern for real-time updates.
+
+```mermaid
+sequenceDiagram
+    Client->>Server: POST /api/ai (with message payload)
+    Server->>AI Service: Generate streaming response
+    loop For each token
+        AI Service->>Server: Stream token
+        Server->>Client: SSE event with token
+        Client->>Client: Update UI in real-time
+    end
+    Server->>Client: Complete event
+```
+
+This pattern provides a responsive user experience with immediate feedback as the AI generates its response.
+
+## Localization Pattern
+
+The application employs a direct text replacement localization pattern for Vietnamese language support.
+
+```mermaid
+flowchart TB
+    StaticText[Static Text Elements] --> DirectReplacement[Direct Text Replacement]
+    DynamicText[Dynamic Content] --> ModelTranslation[AI Model Translation]
+    UserInput[User Input] --> OriginalLanguage[Maintained in Original Language]
+    subgraph Localization Strategy
+        DirectReplacement
+        ModelTranslation
+        OriginalLanguage
+    end
+```
+
+Key aspects of the localization pattern:
+
+1. Static UI elements are directly replaced with Vietnamese equivalents
+2. User interface is designed to accommodate longer Vietnamese text
+3. Character styling and naming follows Vietnamese cultural patterns
+4. Future implementation will use a more structured i18n approach
+
+## File Handling Pattern
+
+The application uses a client-side file processing pattern that minimizes server load.
+
+```mermaid
+sequenceDiagram
+    User->>Client: Upload file
+    Client->>Client: Read file as base64/text
+    Client->>Client: Create file attachment object
+    Client->>Client: Add attachment to message
+    Client->>Server: Send message with attachment
+    Server->>AI Service: Forward message with file data
+    AI Service->>Server: Stream response
+    Server->>Client: Return AI analysis
+```
+
+File processing flow:
+
+1. Files are selected through a file input element
+2. Files are read client-side using FileReader API
+3. Images are encoded as base64, text files are read as text
+4. File metadata and content are attached to the message
+5. The server formats the message+attachments for the AI service
+6. The AI processes both the text and file content together
+
+## State Management
+
+The application uses Vue's Composition API for state management, with reactive references and computed properties.
+
+```javascript
+// Chat state
+const messages = ref<Message[]>([])
+const streamingMessage = ref<Message | null>(null)
+const usersTyping = ref<User[]>([])
+```
+
+This pattern keeps state encapsulated within components while allowing for reactivity and derived state.
+
+## Error Handling
+
+The application uses a multi-layered error handling approach:
+
+1. Client-side validation for user input
+2. Try-catch blocks for asynchronous operations
+3. Fallback UI for failed operations
+4. Error states in the streaming response
+
+```typescript
+try {
+  // API call
+} catch (error) {
+  if (streamingMessage.value) {
+    streamingMessage.value.text = 'Error: Failed to connect to the AI service.'
+  }
+}
+```
+
+## Styling Pattern
+
+The application uses a consistent retro pixel art styling achieved through:
+
+1. TailwindCSS for layout and basic styling
+2. Custom CSS for pixel art effects
+3. Consistent border and shadow treatments
+4. Image rendering with pixelated quality
+
+```css
+.pixel-border {
+  border-style: solid;
+  border-width: 4px;
+  position: relative;
+}
+
+.pixelated {
+  image-rendering: pixelated;
+}
+```
+
+This styling is applied consistently across all components to maintain the retro aesthetic, with adaptations to accommodate Vietnamese text where needed.

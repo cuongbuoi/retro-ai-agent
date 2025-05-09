@@ -8,5 +8,13 @@ export interface Message {
   userId: string
   createdAt: Date
   text: string
+  fileAttachments?: FileAttachment[]
+}
+export interface FileAttachment {
+  id: string
+  name: string
+  type: string
+  size: number
+  content: string | ArrayBuffer // Base64 encoded content or raw buffer
 }
 export type AsyncState = null | 'loading' | 'error' | 'complete'

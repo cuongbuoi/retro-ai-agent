@@ -3,28 +3,31 @@ const selectedAgent = ref('frontendDeveloperAgent')
 </script>
 
 <template>
-  <div class="h-screen w-screen flex flex-col overflow-hidden">
+  <div class="min-h-screen w-screen flex flex-col">
     <div class="pixel-header py-2 bg-pink-600 border-b-4 border-black">
       <div class="flex items-center justify-center flex-col">
         <div class="flex items-center justify-center">
           <img src="/images/logo.png" alt="logo" class="w-10 h-10 mr-2" />
-          <h1 class="pixel-title text-2xl text-center !mb-1">Retro AI Agent Chatbot</h1>
+          <h1 class="pixel-title text-2xl text-center !mb-1">Retro AI Assistant</h1>
         </div>
-        <div class="mt-2 flex items-center justify-center">
-          <select
-            v-model="selectedAgent"
-            class="pixel-select px-3 py-1 border-4 border-black bg-white rounded-none text-lg font-pixel cursor-pointer"
-          >
-            <option value="frontendDeveloperAgent">Frontend Developer</option>
-            <option value="backendDeveloperAgent">Backend Developer</option>
-            <option value="productManagerAgent">Product Manager</option>
-          </select>
+        <div class="flex gap-2 items-center justify-center">
+          <p class="text-white text-center text-sm">Chọn agent</p>
+          <div class="mt-2 flex items-center justify-center">
+            <select
+              v-model="selectedAgent"
+              class="pixel-select px-3 py-1 border-4 border-black bg-white rounded-none text-lg font-pixel cursor-pointer"
+            >
+              <option value="frontendDeveloperAgent">Frontend Developer</option>
+              <option value="backendDeveloperAgent">Backend Developer</option>
+              <option value="productManagerAgent">Product Manager</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="flex-1 flex overflow-hidden">
-      <ChatWidget class="flex-1" :agent="selectedAgent" />
+    <div class="flex-1 flex">
+      <ChatWidget class="flex-1 flex flex-col" :agent="selectedAgent" />
     </div>
   </div>
 </template>
@@ -44,7 +47,6 @@ const selectedAgent = ref('frontendDeveloperAgent')
 
 .pixel-select {
   image-rendering: pixelated;
-  font-family: 'Press Start 2P', cursive;
   font-size: 12px;
   box-shadow: 2px 2px 0 #000;
   transition: all 0.1s;

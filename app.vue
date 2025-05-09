@@ -20,7 +20,6 @@ body {
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden;
   font-family: 'SVN-Retron', monospace;
 }
 
@@ -29,7 +28,9 @@ body {
   height: 100vh;
   width: 100vw;
   background-color: #fdf2f8;
-  overflow: hidden;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .pixel-bg {

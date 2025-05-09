@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { VMarkdownView } from 'vue3-markdown'
-import type { Message, User } from '~/types'
+import type { Message, User, FileAttachment } from '~/types'
 
 defineProps<{
   message?: Message
@@ -9,6 +9,13 @@ defineProps<{
 }>()
 
 const { $isDomAvailable } = useNuxtApp()
+
+// Format file size
+function formatFileSize(size: number): string {
+  if (size < 1024) return `${size} B`
+  else if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
+  else return `${(size / (1024 * 1024)).toFixed(1)} MB`
+}
 </script>
 <template>
   <div
@@ -30,8 +37,8 @@ const { $isDomAvailable } = useNuxtApp()
     <div
       class="chat-bubble py-3 px-4 prose prose-sm max-w-md w-full pixel-bubble"
       :class="{
-        'bg-pink-400 text-white border-pink-500': myMessage,
-        'bg-pink-200 text-pink-800 border-pink-300 max-w-none': !myMessage,
+        'chat-bubble-end bg-pink-400 text-white border-pink-500': myMessage,
+        'chat-bubble-start bg-pink-200 text-pink-800 border-pink-300 max-w-none': !myMessage,
       }"
     >
       <slot>
@@ -41,9 +48,50 @@ const { $isDomAvailable } = useNuxtApp()
             <div v-if="message?.text" class="whitespace-pre-wrap">{{ message.text }}</div>
           </template>
         </ClientOnly>
+
+        <!-- File Attachments -->
+        <div v-if="message?.fileAttachments?.length" class="file-attachments mt-3 pt-3 border-t border-black/10">
+          <p class="text-xs mb-2">{{ message.fileAttachments.length > 1 ? 'Files' : 'File' }}:</p>
+          <div class="flex flex-col gap-2">
+            <div
+              v-for="file in message.fileAttachments"
+              :key="file.id"
+              class="attachment p-2 rounded border"
+              :class="myMessage ? 'border-white/20 bg-pink-500/20' : 'border-pink-300 bg-pink-100'"
+            >
+              <!-- Images preview -->
+              <div v-if="file.type.startsWith('image/')" class="mb-1">
+                <img
+                  :src="file.content.toString()"
+                  :alt="file.name"
+                  class="max-w-[200px] max-h-[150px] rounded pixelated"
+                />
+              </div>
+
+              <!-- File info -->
+              <div class="flex items-center text-xs">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  class="mr-1"
+                >
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span class="truncate max-w-[150px]">{{ file.name }}</span>
+                <span class="ml-1 opacity-70">({{ formatFileSize(file.size) }})</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </slot>
     </div>
-    <div class="chat-footer text-xs text-pink-400 mt-2" v-if="myMessage">[SENT]</div>
+    <div class="chat-footer text-xs text-pink-400 mt-2" v-if="myMessage">[Đã gửi]</div>
   </div>
 </template>
 <style scoped>
@@ -105,6 +153,11 @@ const { $isDomAvailable } = useNuxtApp()
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
 }
 
+.file-attachments {
+  position: relative;
+  z-index: 2;
+}
+
 :deep(code) {
   background: #fdf2f8;
   color: #be185d;
@@ -161,5 +214,9 @@ const { $isDomAvailable } = useNuxtApp()
 :deep() > * {
   position: relative;
   z-index: 2;
+}
+
+:deep(.chat-bubble-end) .markdown-body p {
+  @apply text-white;
 }
 </style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Message, User } from '../../types'
+import type { Message, User, FileAttachment } from '@/types'
 import { nanoid } from 'nanoid'
 
 // Props
@@ -11,7 +11,7 @@ const props = defineProps<{
 const me = ref<User>({
   id: 'user',
   avatar: '/user.png',
-  name: 'You',
+  name: 'Thằng Bảy',
 })
 const bot = ref<User>({
   id: 'assistant',
@@ -24,14 +24,33 @@ const users = computed(() => [me.value, bot.value])
 const messages = ref<Message[]>([])
 const streamingMessage = ref<Message | null>(null)
 const usersTyping = ref<User[]>([])
+const fileInputRef = ref<HTMLInputElement | null>(null)
+const selectedFiles = ref<FileAttachment[]>([])
+const isFileProcessing = ref(false)
 
 // Format messages for API - only send last 2 messages to reduce payload size
 const messagesForApi = computed(() =>
   messages.value
-    .map((m) => ({
-      role: m.userId,
-      content: m.text,
-    }))
+    .map((m) => {
+      const message = {
+        role: m.userId,
+        content: m.text,
+      }
+
+      // Add file attachments to the last message if there are any
+      if (m === messages.value[messages.value.length - 1] && m.fileAttachments?.length) {
+        return {
+          ...message,
+          fileAttachments: m.fileAttachments.map((file) => ({
+            name: file.name,
+            type: file.type,
+            content: file.content.toString(),
+          })),
+        }
+      }
+
+      return message
+    })
     .slice(-2),
 )
 
@@ -107,8 +126,64 @@ const processStreamChunk = (buffer: string, decoder: TextDecoder, chunk: Uint8Ar
   return remainingBuffer
 }
 
+// Handle file selection
+async function handleFileSelect(event: Event) {
+  const input = event.target as HTMLInputElement
+  if (!input.files?.length) return
+
+  isFileProcessing.value = true
+  selectedFiles.value = []
+
+  try {
+    for (let i = 0; i < input.files.length; i++) {
+      const file = input.files[i]
+
+      // Process file
+      const fileContent = await readFileAsBase64(file)
+
+      selectedFiles.value.push({
+        id: nanoid(),
+        name: file.name,
+        type: file.type,
+        size: file.size,
+        content: fileContent,
+      })
+    }
+  } catch (error) {
+    console.error('Error processing files:', error)
+  } finally {
+    isFileProcessing.value = false
+  }
+}
+
+// Read file as base64
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result as string)
+    reader.onerror = reject
+
+    if (file.type.startsWith('image/')) {
+      reader.readAsDataURL(file) // Keep the data URL format for images
+    } else {
+      reader.readAsText(file)
+    }
+  })
+}
+
+// Remove a selected file
+function removeFile(fileId: string) {
+  selectedFiles.value = selectedFiles.value.filter((file) => file.id !== fileId)
+}
+
 // Handle new message submission
 async function handleNewMessage(message: Message) {
+  // Add file attachments if any
+  if (selectedFiles.value.length > 0) {
+    message.fileAttachments = [...selectedFiles.value]
+    selectedFiles.value = [] // Clear selected files
+  }
+
   // Add user message to chat
   messages.value.push(message)
   usersTyping.value.push(bot.value)
@@ -159,13 +234,55 @@ async function handleNewMessage(message: Message) {
     usersTyping.value = []
   }
 }
+
+// Trigger file input click
+function openFileSelector() {
+  if (fileInputRef.value) {
+    fileInputRef.value.click()
+  }
+}
 </script>
 <template>
-  <ChatBox
-    :me="me"
-    :users="users"
-    :messages="streamingMessage ? [...messages, streamingMessage] : messages"
-    @new-message="handleNewMessage"
-    :usersTyping="usersTyping"
-  />
+  <div class="chat-widget h-full flex flex-col">
+    <input ref="fileInputRef" type="file" @change="handleFileSelect" class="hidden" multiple />
+
+    <ChatBox
+      :me="me"
+      :users="users"
+      :messages="streamingMessage ? [...messages, streamingMessage] : messages"
+      @new-message="handleNewMessage"
+      :usersTyping="usersTyping"
+      @upload-file="openFileSelector"
+      :is-file-processing="isFileProcessing"
+    >
+      <template #before-messages>
+        <div
+          v-if="selectedFiles.length > 0"
+          class="selected-files p-2 bg-pink-100 rounded pixel-border border-2 border-black mx-2 my-2"
+        >
+          <p class="text-xs text-pink-700 mb-1">Đã tải lên file:</p>
+          <div class="flex flex-wrap gap-2">
+            <div
+              v-for="file in selectedFiles"
+              :key="file.id"
+              class="file-badge flex items-center bg-pink-200 px-2 py-1 rounded"
+            >
+              <span class="text-xs text-pink-700 truncate max-w-[150px]">{{ file.name }}</span>
+              <button @click="removeFile(file.id)" class="ml-2 text-pink-700 text-xs leading-none">×</button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </ChatBox>
+  </div>
 </template>
+
+<style scoped>
+.chat-widget {
+  height: 100%;
+}
+
+.selected-files {
+  image-rendering: pixelated;
+}
+</style>
