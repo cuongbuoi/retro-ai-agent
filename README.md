@@ -88,3 +88,28 @@ To create a new agent, add a new file in the `agents` directory and register it 
 ## License
 
 MIT
+
+## Deployment to Vercel
+
+This project is configured for easy deployment on Vercel. Follow these steps to deploy:
+
+1. Create a Vercel account if you don't have one already at [vercel.com](https://vercel.com)
+2. Install the Vercel CLI: `npm install -g vercel`
+3. Run `vercel login` and follow the instructions to log in
+4. In the project directory, run `vercel` to deploy
+5. Follow the prompts in the CLI
+
+### Environment Variables
+
+Make sure to set these environment variables in your Vercel project settings:
+
+- `NUXT_GEMINI_API_KEY`: Your Google Gemini API key
+
+### Build Settings
+
+The project is already configured with:
+
+- Build Command: `npm run generate`
+- Output Directory: `.output/public`
+
+These settings are defined in the `vercel.json` file.

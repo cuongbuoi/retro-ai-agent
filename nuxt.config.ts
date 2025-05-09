@@ -7,6 +7,8 @@ export default defineNuxtConfig({
     prerender: {
       autoSubfolderIndex: false,
     },
+    // Enable static optimization for Vercel deployment
+    static: true,
   },
   devServer: {
     port: process.env.NUXT_PORT ? parseInt(process.env.NUXT_PORT) : 6868,

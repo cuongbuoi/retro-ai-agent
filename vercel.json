@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "buildCommand": "npm run generate",
+  "outputDirectory": ".output/public",
+  "github": {
+    "silent": true
+  },
+  "cleanUrls": true
+}
