@@ -1,16 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "chmod +x build.sh && ./build.sh",
+  "buildCommand": "yarn build",
   "outputDirectory": ".output",
   "github": {
     "enabled": true,
     "silent": false
   },
   "cleanUrls": true,
-  "routes": [
-    { "src": "/_nuxt/(.*)", "dest": "/_nuxt/$1" },
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/" }
-  ],
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }],
   "regions": ["sin1"]
 }
