@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "nuxt build",
+    "deploy": "yarn install --immutable && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",

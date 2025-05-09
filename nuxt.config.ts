@@ -2,9 +2,10 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
-  // Disable SSR for Edge Functions to avoid document reference errors
-  ssr: false,
+  // Enable SSR for Cloudflare Pages
+  ssr: true,
   nitro: {
+    preset: 'cloudflare-pages',
     prerender: {
       autoSubfolderIndex: false,
     },

@@ -1,0 +1,16 @@
+[build]
+command = "yarn install --immutable && yarn build"
+publish = ".output/public"
+
+[build.environment]
+NODE_VERSION = "22"
+
+[site]
+bucket = ".output/public"
+
+[functions]
+directory = "functions"
+
+[routes]
+include = "/*"
+exclude = ["/assets/*", "/_nuxt/*", "/favicon.ico", "/sw.js"] 

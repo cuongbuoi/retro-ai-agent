@@ -20,3 +20,9 @@ logs
 
 # Local env files
 .env
+
+# Cloudflare
+.wrangler
+.dev.vars
+wrangler.toml
+.cloudflare/workers-site/worker
