@@ -8,6 +8,7 @@
     "node": ">=22.0.0",
     "yarn": "1.22.22"
   },
+  "packageManager": "yarn@1.22.22",
   "scripts": {
     "build": "nuxt build",
     "deploy": "yarn install --frozen-lockfile && nuxt build",
