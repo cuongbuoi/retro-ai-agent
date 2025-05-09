@@ -5,17 +5,9 @@ export default defineNuxtConfig({
   // Disable SSR for Edge Functions to avoid document reference errors
   ssr: false,
   nitro: {
-    preset: 'netlify-edge',
-  },
-  routeRules: {
-    // API routes must use SSR even with client-side app
-    '/api/**': {
-      ssr: true,
+    prerender: {
+      autoSubfolderIndex: false,
     },
-    '/examples/*': { redirect: '/redirect-route' },
-    '/modify-headers-route': { headers: { 'x-magic-of': 'nuxt and vercel' } },
-    // Enables client-side rendering
-    '/spa': { ssr: false },
   },
   devServer: {
     port: process.env.NUXT_PORT ? parseInt(process.env.NUXT_PORT) : 6868,
