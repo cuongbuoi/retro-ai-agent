@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "buildCommand": "npm run generate",
-  "outputDirectory": ".output/public",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".output",
   "github": {
+    "enabled": false,
     "silent": true
   },
   "cleanUrls": true
