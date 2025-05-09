@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   // Disable SSR for Edge Functions to avoid document reference errors
   ssr: false,
   nitro: {
-    preset: 'netlify-edge',
+    preset: 'node-server',
   },
   routeRules: {
     // API routes must use SSR even with client-side app
