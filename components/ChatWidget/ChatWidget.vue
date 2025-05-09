@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Message, User } from '../types'
+import type { Message, User } from '../../types'
 import { nanoid } from 'nanoid'
 
 const props = defineProps<{

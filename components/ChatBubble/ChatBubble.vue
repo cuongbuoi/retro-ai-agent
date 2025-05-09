@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { VMarkdownView } from 'vue3-markdown'
 // import "vue3-markdown/dist/style.css";
-import type { Message, User } from '@/types'
+import type { Message, User } from '~/types'
 
 defineProps<{
   message?: Message

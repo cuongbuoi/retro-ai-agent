@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import type { Message, User } from '../types'
-import PixelButton from './PixelButton.vue'
+import type { Message, User } from '@/types'
+import PixelButton from '@/components/PixelButton/PixelButton.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -11,7 +11,7 @@ const props = withDefaults(
     usersTyping?: User[]
   }>(),
   {
-    usersTyping: [],
+    usersTyping: () => [] as User[],
   },
 )
 
