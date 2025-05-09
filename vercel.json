@@ -3,8 +3,8 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".output",
   "github": {
-    "enabled": false,
-    "silent": true
+    "enabled": true,
+    "silent": false
   },
   "cleanUrls": true
 }
