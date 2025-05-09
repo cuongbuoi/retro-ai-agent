@@ -5,16 +5,12 @@ export default defineNuxtConfig({
   // Enable SSR for server API support
   ssr: true,
   nitro: {
-    prerender: {
-      autoSubfolderIndex: false,
-    },
-    // Enable static optimization for Vercel deployment
-    static: true,
+    // Remove static: true as it conflicts with SSR
   },
   // Define route rules for Vercel deployment
   routeRules: {
-    // Static pages
-    '/': { prerender: true },
+    // Client-side only for pages that use document/window
+    '/': { ssr: false },
     // API routes should use SSR
     '/api/**': { ssr: true },
   },
