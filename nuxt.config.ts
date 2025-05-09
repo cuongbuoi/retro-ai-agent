@@ -2,8 +2,8 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
-  // Client-side rendering mode for SPA
-  ssr: false,
+  // Enable SSR for server API support
+  ssr: true,
   nitro: {
     prerender: {
       autoSubfolderIndex: false,
@@ -13,10 +13,10 @@ export default defineNuxtConfig({
   },
   // Define route rules for Vercel deployment
   routeRules: {
-    // All routes (by default) will be cached at the edge
-    '/**': { isr: 60 },
     // Static pages
     '/': { prerender: true },
+    // API routes should use SSR
+    '/api/**': { ssr: true },
   },
   devServer: {
     port: process.env.NUXT_PORT ? parseInt(process.env.NUXT_PORT) : 6868,

@@ -6,5 +6,11 @@
     "enabled": true,
     "silent": false
   },
-  "cleanUrls": true
+  "cleanUrls": true,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    }
+  ]
 }
