@@ -3,8 +3,13 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
   ssr: false,
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false,
+    },
+  },
   devServer: {
-    port: 6868,
+    port: process.env.NUXT_PORT ? parseInt(process.env.NUXT_PORT) : 6868,
   },
   runtimeConfig: {
     GEMINI_API_KEY: process.env.NUXT_GEMINI_API_KEY, // Using API key from .env file
