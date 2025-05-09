@@ -1,8 +1,8 @@
-import { frontendDeveloperAgent } from '@/agents/frontendDeveloperAgent'
-import { backendDeveloperAgent } from '@/agents/backendDeveloperAgent'
+// Vercel Edge Runtime to enable streaming
+export const runtime = 'edge'
 import { GoogleGenAI } from '@google/genai'
 import * as agents from '@/agents'
-import { getQuery, readBody, setResponseHeaders, createError } from 'h3'
+import { getQuery, readBody, setResponseHeaders } from 'h3'
 
 interface Message {
   role: string
@@ -19,6 +19,9 @@ export default defineEventHandler(async (event) => {
 
   // Create and set up response
   const response = event.node.res
+
+  // Check if we're running on Vercel
+  const isVercel = process.env.VERCEL === '1'
 
   try {
     // Handle both GET and POST methods
@@ -115,13 +118,18 @@ export default defineEventHandler(async (event) => {
         if (chunk.text) {
           fullText += chunk.text
 
-          // Send chunk
+          // Send chunk (flush immediately if not on Vercel to ensure streaming)
           response.write(
             `data: ${JSON.stringify({
               type: 'chunk',
               content: chunk.text,
             })}\n\n`,
           )
+
+          // If not on Vercel, flush immediately to force streaming
+          if (!isVercel && typeof (response as any).flush === 'function') {
+            ;(response as any).flush()
+          }
         }
       }
 
