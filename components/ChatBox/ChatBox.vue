@@ -23,21 +23,56 @@ function getUser(id: string) {
   return props.users.find((user) => user.id === id)
 }
 
-const input = ref()
-
+const textArea = ref()
 const messageBox = ref()
 
 const sendMessage = () => {
-  if (input.value.value) {
+  const text = textArea.value.value.trim()
+  textArea.value.value = text
+  if (text) {
     emit('newMessage', {
       id: nanoid(),
       userId: props.me.id,
       createdAt: new Date(),
-      text: input.value.value,
+      text,
     })
-    input.value.value = ''
+    textArea.value.value = ''
+    // Reset textarea height
+    textArea.value.style.height = 'auto'
   }
 }
+
+const adjustTextareaHeight = () => {
+  const textarea = textArea.value
+  if (!textarea) return
+
+  // Reset height to auto to get the correct scrollHeight
+  textarea.style.height = 'auto'
+
+  // Set the height to match content (scrollHeight) up to max height
+  const maxHeight = 150 // maximum height in pixels
+  const newHeight = Math.min(textarea.scrollHeight, maxHeight)
+  textarea.style.height = `${newHeight}px`
+}
+
+// Handle textarea input to adjust height
+const onTextareaInput = () => {
+  adjustTextareaHeight()
+}
+
+// Handle Enter key to send message, Shift+Enter for new line
+const onTextareaKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    if (!e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+}
+
+onMounted(() => {
+  adjustTextareaHeight()
+})
 
 watch(
   () => props.messages,
@@ -99,12 +134,14 @@ watch(
           </span>
         </div>
         <form class="flex items-center gap-3" @submit.prevent="sendMessage">
-          <input
-            ref="input"
-            class="input w-full px-3 py-2 bg-pink-50 border-4 pixel-border border-black text-pink-700 focus:outline-none text-sm font-['SVN-Retron'] h-[52px]"
-            type="text"
+          <textarea
+            ref="textArea"
+            class="input w-full px-3 py-2 bg-pink-50 border-4 pixel-border border-black text-pink-700 focus:outline-none text-sm font-['SVN-Retron'] min-h-[52px] max-h-[150px] overflow-y-auto resize-none"
             placeholder="Nhập tin nhắn..."
-          />
+            rows="1"
+            @input="onTextareaInput"
+            @keydown="onTextareaKeydown"
+          ></textarea>
           <div class="send-button-container">
             <PixelButton text="Gửi" color="pink" size="chat" @click="sendMessage" type="submit" class="send-button" />
           </div>
@@ -160,6 +197,21 @@ watch(
 .messages::-webkit-scrollbar-thumb {
   background-color: #f9a8d4;
   border: 3px solid #fce7f3;
+  image-rendering: pixelated;
+}
+
+/* Add scrollbar styling for textarea too */
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #fce7f3;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #f9a8d4;
+  border: 2px solid #fce7f3;
   image-rendering: pixelated;
 }
 
