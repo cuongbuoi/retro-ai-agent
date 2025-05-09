@@ -2,8 +2,8 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
-  // Revert to client-side rendering
-  ssr: false,
+  // Enable SSR for Edge Functions
+  ssr: true,
   nitro: {
     preset: 'netlify-edge',
   },
