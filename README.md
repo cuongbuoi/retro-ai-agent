@@ -1,6 +1,6 @@
-# AI Chatbot with Gemini API
+# Retro AI Agent Assistant
 
-This is a chatbot application built with Nuxt.js that uses Google's Gemini API for generating AI responses.
+This is a flexible AI assistant platform to support multiple specialized AI agents. The system currently features a frontend development expert and can be easily extended with additional agents for different domains and specialties.
 
 ## Setup
 
@@ -11,7 +11,7 @@ This is a chatbot application built with Nuxt.js that uses Google's Gemini API f
    ```
 3. Install dependencies
    ```bash
-   npm install
+   yarn install
    ```
 4. Get a Gemini API key from [Google AI Studio](https://ai.google.dev/)
 5. Create a `.env` file in the root directory with the following content:
@@ -20,32 +20,67 @@ This is a chatbot application built with Nuxt.js that uses Google's Gemini API f
    ```
 6. Run the development server
    ```bash
-   npm run dev
+   yarn dev
    ```
+
+## Available Scripts
+
+```bash
+# Start development server
+yarn dev
+
+# Build for production
+yarn build
+
+# Generate static site
+yarn generate
+
+# Preview production build
+yarn preview
+
+# Prepare Nuxt
+yarn postinstall
+
+# Lint code
+yarn lint
+
+# Fix linting issues
+yarn lint:fix
+
+# Format code with Prettier
+yarn format
+
+# Check formatting
+yarn format:check
+```
 
 ## Features
 
-- Multiple agent personalities (customerSupport, facebook, twitter)
+- Expert frontend development assistance
+- Multilingual support (English and Vietnamese)
 - Customizable system prompts
 - Responsive UI
 
 ## Chatbot Agent System
 
-The application uses a system of "agents" that define the personality and behavior of the chatbot. These agents are defined in the `agents` directory.
+The application uses a system of "agents" that define the personality and behavior of the AI assistant. These agents are defined in the `agents` directory.
 
 ### Available Agents
 
-- `customerSupportAgent`: Provides customer support for a fictional "Social Media Post Generator" application
-- `facebookAgent`: Specialized in creating Facebook-style posts
-- `twitterAgent`: Specialized in creating Twitter-style posts
+- `frontendDeveloperAgent`: An expert frontend developer with 15 years of experience across various frontend technologies and frameworks. Provides guidance on:
+  - Modern JavaScript/TypeScript, HTML, and CSS
+  - Frontend frameworks (React, Vue, Angular, Svelte)
+  - Component design patterns and best practices
+  - Performance optimization techniques
+  - AI integration in frontend applications
 
 ### Creating a New Agent
 
-To create a new agent, add a new file in the `agents` directory following the pattern of the existing agents.
+To create a new agent, add a new file in the `agents` directory and register it in the `agents/index.ts` file.
 
 ## Technology Stack
 
-- [Nuxt.js](https://nuxt.com/)
+- [Nuxt](https://nuxt.com/)
 - [Google Gemini API](https://ai.google.dev/)
 - [TailwindCSS](https://tailwindcss.com/)
 - [DaisyUI](https://daisyui.com/)

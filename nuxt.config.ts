@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     port: 6868,
   },
   runtimeConfig: {
-    GEMINI_API_KEY: process.env.GEMINI_API_KEY, // Using API key from .env file
+    GEMINI_API_KEY: process.env.NUXT_GEMINI_API_KEY, // Using API key from .env file
   },
   app: {
     head: {
