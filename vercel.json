@@ -8,11 +8,5 @@
   },
   "cleanUrls": true,
   "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }],
-  "regions": ["sin1"],
-  "functions": {
-    "api/**": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  }
+  "regions": ["sin1"]
 }
