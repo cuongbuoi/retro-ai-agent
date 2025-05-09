@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { VMarkdownView } from 'vue3-markdown'
-// import "vue3-markdown/dist/style.css";
 import type { Message, User } from '~/types'
 
 defineProps<{
@@ -8,6 +7,8 @@ defineProps<{
   user?: User
   myMessage?: boolean
 }>()
+
+const { $isDomAvailable } = useNuxtApp()
 </script>
 <template>
   <div
@@ -34,7 +35,12 @@ defineProps<{
       }"
     >
       <slot>
-        <VMarkdownView :content="message?.text" class="!bg-transparent w-full" />
+        <ClientOnly>
+          <VMarkdownView :content="message?.text" class="!bg-transparent w-full" />
+          <template #fallback>
+            <div v-if="message?.text" class="whitespace-pre-wrap">{{ message.text }}</div>
+          </template>
+        </ClientOnly>
       </slot>
     </div>
     <div class="chat-footer text-xs text-pink-400 mt-2" v-if="myMessage">[SENT]</div>
