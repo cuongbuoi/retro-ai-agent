@@ -1,9 +1,0 @@
-{
-  "build": {
-    "command": "yarn install --immutable && yarn build",
-    "environment": {
-      "NODE_VERSION": "22"
-    },
-    "output_directory": ".output/public"
-  }
-}
