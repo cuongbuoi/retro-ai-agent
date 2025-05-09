@@ -20,3 +20,15 @@ logs
 
 # Local env files
 .env
+
+# Keep yarn files
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+# But ignore these yarn files
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz

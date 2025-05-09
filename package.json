@@ -4,6 +4,7 @@
   "description": "Flexible AI assistant platform to support multiple specialized AI agents. The system currently features a frontend development expert and can be easily extended with additional agents for different domains and specialties",
   "private": true,
   "type": "module",
+  "packageManager": "yarn@3.6.3",
   "engines": {
     "node": ">=22.0.0"
   },
