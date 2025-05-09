@@ -2,10 +2,12 @@
 import type { Message, User } from '../../types'
 import { nanoid } from 'nanoid'
 
+// Props
 const props = defineProps<{
   agent?: string
 }>()
 
+// Define users
 const me = ref<User>({
   id: 'user',
   avatar: '/user.png',
@@ -16,16 +18,14 @@ const bot = ref<User>({
   avatar: '/bot.png',
   name: 'Đạt Văn Tây',
 })
-
 const users = computed(() => [me.value, bot.value])
 
+// Chat state
 const messages = ref<Message[]>([])
 const streamingMessage = ref<Message | null>(null)
 const usersTyping = ref<User[]>([])
 
-// send messages to Chat API here
-// and in the empty function below
-
+// Format messages for API - only send last 2 messages to reduce payload size
 const messagesForApi = computed(() =>
   messages.value
     .map((m) => ({
@@ -35,11 +35,85 @@ const messagesForApi = computed(() =>
     .slice(-2),
 )
 
+// Process SSE data events
+const processSSEData = (data: any) => {
+  switch (data.type) {
+    case 'start':
+      console.log('Stream started')
+      break
+
+    case 'chunk':
+      if (streamingMessage.value && data.content) {
+        streamingMessage.value.text += data.content
+      }
+      break
+
+    case 'complete':
+      if (data.message?.choices?.[0]?.message) {
+        const finalMessage = {
+          id: data.message.id || nanoid(),
+          userId: bot.value.id,
+          createdAt: new Date(),
+          text: data.message.choices[0].message.content,
+        }
+
+        // Replace streaming message with final message
+        const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
+
+        if (index !== -1) {
+          messages.value[index] = finalMessage
+        } else {
+          messages.value.push(finalMessage)
+        }
+
+        streamingMessage.value = null
+      }
+      break
+
+    case 'error':
+      console.error('Streaming error:', data.error)
+      if (streamingMessage.value) {
+        streamingMessage.value.text += `\n\nError: ${data.error}`
+      }
+      break
+  }
+}
+
+// Process SSE stream chunks
+const processStreamChunk = (buffer: string, decoder: TextDecoder, chunk: Uint8Array) => {
+  // Append new decoded text to buffer
+  const newBuffer = buffer + decoder.decode(chunk, { stream: true })
+
+  // Split buffer into complete messages
+  const messageChunks = newBuffer.split('\n\n')
+
+  // Keep the last potentially incomplete chunk in buffer
+  const remainingBuffer = messageChunks.pop() || ''
+
+  // Process all complete messages
+  for (const messageText of messageChunks) {
+    if (messageText.trim() === '') continue
+
+    if (messageText.startsWith('data: ')) {
+      try {
+        const data = JSON.parse(messageText.substring(6))
+        processSSEData(data)
+      } catch (e) {
+        console.error('Error parsing SSE data:', e)
+      }
+    }
+  }
+
+  return remainingBuffer
+}
+
+// Handle new message submission
 async function handleNewMessage(message: Message) {
+  // Add user message to chat
   messages.value.push(message)
   usersTyping.value.push(bot.value)
 
-  // Create an initial streaming message
+  // Create placeholder for streaming response
   streamingMessage.value = {
     id: nanoid(),
     userId: bot.value.id,
@@ -48,7 +122,7 @@ async function handleNewMessage(message: Message) {
   }
 
   try {
-    // Use fetch for POST request with streaming
+    // Fetch API response as stream
     const response = await fetch('/api/ai', {
       method: 'POST',
       headers: {
@@ -61,16 +135,12 @@ async function handleNewMessage(message: Message) {
       }),
     })
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 
-    // Get reader from response body
     const reader = response.body?.getReader()
-    if (!reader) {
-      throw new Error('No readable stream available')
-    }
+    if (!reader) throw new Error('No readable stream available')
 
+    // Process stream
     const decoder = new TextDecoder()
     let buffer = ''
 
@@ -78,65 +148,7 @@ async function handleNewMessage(message: Message) {
       const { done, value } = await reader.read()
       if (done) break
 
-      // Decode and append to buffer
-      buffer += decoder.decode(value, { stream: true })
-
-      // Process complete SSE messages
-      const messageChunks = buffer.split('\n\n')
-      // Keep the last potentially incomplete message in the buffer
-      buffer = messageChunks.pop() || ''
-
-      for (const messageText of messageChunks) {
-        if (messageText.trim() === '') continue
-
-        // Parse SSE message
-        if (messageText.startsWith('data: ')) {
-          try {
-            const data = JSON.parse(messageText.substring(6))
-
-            if (data.type === 'start') {
-              // Stream started
-              console.log('Stream started')
-            } else if (data.type === 'chunk') {
-              // Add chunk to streaming message
-              if (streamingMessage.value && data.content) {
-                streamingMessage.value.text += data.content
-              }
-            } else if (data.type === 'complete') {
-              // Stream complete
-              if (data.message && data.message.choices && data.message.choices[0].message) {
-                const finalMessage = {
-                  id: data.message.id || nanoid(),
-                  userId: bot.value.id,
-                  createdAt: new Date(),
-                  text: data.message.choices[0].message.content,
-                }
-
-                // Replace streaming message with final message
-                const index = messages.value.findIndex(
-                  (m) => streamingMessage.value && m.id === streamingMessage.value.id,
-                )
-                if (index !== -1) {
-                  messages.value[index] = finalMessage
-                } else {
-                  messages.value.push(finalMessage)
-                }
-
-                // Clear streaming message
-                streamingMessage.value = null
-              }
-            } else if (data.type === 'error') {
-              // Handle error
-              console.error('Streaming error:', data.error)
-              if (streamingMessage.value) {
-                streamingMessage.value.text += `\n\nError: ${data.error}`
-              }
-            }
-          } catch (e) {
-            console.error('Error parsing SSE data:', e)
-          }
-        }
-      }
+      buffer = processStreamChunk(buffer, decoder, value)
     }
   } catch (error) {
     console.error('Streaming request failed:', error)
