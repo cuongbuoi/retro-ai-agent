@@ -2,23 +2,20 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
-  // Hybrid rendering - enables both client and server components
-  ssr: true,
+  // Revert to client-side rendering
+  ssr: false,
   nitro: {
-    preset: 'vercel',
+    preset: 'vercel-edge',
   },
-  // Define route rules for Vercel deployment
   routeRules: {
-    // Use client-side rendering for homepage
-    '/': {
-      ssr: false,
-      prerender: false,
-    },
-    // API routes must use SSR
+    // API routes must use SSR even with client-side app
     '/api/**': {
       ssr: true,
-      cors: true,
     },
+    '/examples/*': { redirect: '/redirect-route' },
+    '/modify-headers-route': { headers: { 'x-magic-of': 'nuxt and vercel' } },
+    // Enables client-side rendering
+    '/spa': { ssr: false },
   },
   devServer: {
     port: process.env.NUXT_PORT ? parseInt(process.env.NUXT_PORT) : 6868,
