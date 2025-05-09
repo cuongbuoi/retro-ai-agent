@@ -1,9 +1,10 @@
 [build]
-command = "yarn install --immutable && yarn build"
+command = "npm install -g yarn@1.22.22 && yarn install --frozen-lockfile && yarn build"
 publish = ".output/public"
 
 [build.environment]
 NODE_VERSION = "22"
+YARN_VERSION = "1.22.22"
 
 [site]
 bucket = ".output/public"

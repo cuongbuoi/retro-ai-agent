@@ -5,11 +5,12 @@
   "private": true,
   "type": "module",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.0.0",
+    "yarn": "1.22.22"
   },
   "scripts": {
     "build": "nuxt build",
-    "deploy": "yarn install --immutable && nuxt build",
+    "deploy": "yarn install --frozen-lockfile && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
