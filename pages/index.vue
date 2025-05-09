@@ -26,13 +26,6 @@ const selectedAgent = ref('frontendDeveloperAgent')
     <div class="flex-1 flex overflow-hidden">
       <ChatWidget class="flex-1" :agent="selectedAgent" />
     </div>
-
-    <div class="pixel-footer py-2 px-4 bg-pink-600 border-t-4 border-black flex items-center justify-between">
-      <span class="text-white text-sm">Pixel UI Demo</span>
-      <NuxtLink to="/pixel-buttons">
-        <PixelButton text="Pixel Buttons" color="pink" />
-      </NuxtLink>
-    </div>
   </div>
 </template>
 
@@ -40,12 +33,6 @@ const selectedAgent = ref('frontendDeveloperAgent')
 .pixel-header {
   position: relative;
   box-shadow: 0 4px 0 rgba(219, 39, 119, 0.3);
-  z-index: 10;
-}
-
-.pixel-footer {
-  position: relative;
-  box-shadow: 0 -4px 0 rgba(219, 39, 119, 0.3);
   z-index: 10;
 }
 
