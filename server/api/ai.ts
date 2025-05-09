@@ -1,4 +1,5 @@
-import { frontendDeveloperAgent } from './../../agents/frontendDeveloperAgent'
+import { frontendDeveloperAgent } from '@/agents/frontendDeveloperAgent'
+import { backendDeveloperAgent } from '@/agents/backendDeveloperAgent'
 import { GoogleGenAI } from '@google/genai'
 import * as agents from '@/agents'
 import { getQuery, readBody, setResponseHeaders, createError } from 'h3'

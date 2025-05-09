@@ -68,11 +68,21 @@ The application uses a system of "agents" that define the personality and behavi
 ### Available Agents
 
 - `frontendDeveloperAgent`: An expert frontend developer with 15 years of experience across various frontend technologies and frameworks. Provides guidance on:
+
   - Modern JavaScript/TypeScript, HTML, and CSS
   - Frontend frameworks (React, Vue, Angular, Svelte)
   - Component design patterns and best practices
   - Performance optimization techniques
   - AI integration in frontend applications
+
+- `backendDeveloperAgent`: A senior backend developer with 20 years of experience across various backend technologies and frameworks. Provides guidance on:
+  - Server-side languages (Node.js, Python, Java, Go, PHP, C#)
+  - Database systems (SQL, NoSQL, GraphQL)
+  - API design and implementation
+  - Microservices architecture
+  - Cloud services and DevOps
+  - Performance optimization and scaling
+  - Security best practices
 
 ### Creating a New Agent
 

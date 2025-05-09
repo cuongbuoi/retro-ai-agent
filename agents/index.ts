@@ -1,8 +1,9 @@
 // register all agent files here
 export * from './frontendDeveloperAgent'
+export * from './backendDeveloperAgent'
 
 // and register types here
-export type Agent = 'frontendDeveloperAgent'
+export type Agent = 'frontendDeveloperAgent' | 'backendDeveloperAgent'
 
 // Define interfaces for the agent options
 export interface RequestOptions {
