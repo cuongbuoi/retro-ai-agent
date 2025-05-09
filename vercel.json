@@ -1,12 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "chmod +x build.sh && ./build.sh",
   "outputDirectory": ".output",
   "github": {
     "enabled": true,
     "silent": false
   },
   "cleanUrls": true,
-  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }],
+  "routes": [
+    { "src": "/_nuxt/(.*)", "dest": "/_nuxt/$1" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/" }
+  ],
   "regions": ["sin1"]
 }
