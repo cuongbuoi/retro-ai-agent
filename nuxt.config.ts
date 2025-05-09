@@ -2,13 +2,20 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
   modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt'],
-  // Enable SSR for Cloudflare Pages
-  ssr: true,
+  // Disable SSR for Edge Functions to avoid document reference errors
+  ssr: false,
   nitro: {
-    preset: 'cloudflare-pages',
-    prerender: {
-      autoSubfolderIndex: false,
+    preset: 'netlify-edge',
+  },
+  routeRules: {
+    // API routes must use SSR even with client-side app
+    '/api/**': {
+      ssr: true,
     },
+    '/examples/*': { redirect: '/redirect-route' },
+    '/modify-headers-route': { headers: { 'x-magic-of': 'nuxt and vercel' } },
+    // Enables client-side rendering
+    '/spa': { ssr: false },
   },
   devServer: {
     port: process.env.NUXT_PORT ? parseInt(process.env.NUXT_PORT) : 6868,

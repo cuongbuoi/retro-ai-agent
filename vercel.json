@@ -1,7 +1,12 @@
 {
   "version": 2,
-  "buildCommand": "yarn build",
-  "installCommand": "yarn install --frozen-lockfile",
-  "framework": "nuxt",
-  "outputDirectory": ".output/public"
+  "buildCommand": "npm run build",
+  "outputDirectory": ".output",
+  "github": {
+    "enabled": true,
+    "silent": false
+  },
+  "cleanUrls": true,
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/$1" }],
+  "regions": ["sin1"]
 }
