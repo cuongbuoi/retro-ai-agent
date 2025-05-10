@@ -38,7 +38,9 @@
     "frontendDeveloperAgent": "Frontend Developer",
     "frontendDeveloperAgentDesc": "Specializes in UI/UX implementation and frontend technologies",
     "backendDeveloperAgent": "Backend Developer",
-    "backendDeveloperAgentDesc": "Focuses on server-side logic and API implementation"
+    "backendDeveloperAgentDesc": "Focuses on server-side logic and API implementation",
+    "novelistAgent": "Master Novelist",
+    "novelistAgentDesc": "Creates captivating stories with rich characters and vivid worlds"
   },
   "deepResearch": {
     "title": "Deep Research Feature",

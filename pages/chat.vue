@@ -19,7 +19,8 @@
         </div>
         <div class="w-10 h-10"><!-- Empty div for balance --></div>
       </div>
-      <div class="flex justify-center mt-1">
+      <div class="flex items-center gap-2 justify-center mt-1">
+        <div class="text-white text-sm">{{ t('chat.select_agent') }}</div>
         <div
           class="agent-badge bg-white px-3 py-1 rounded-full border-2 border-black cursor-pointer"
           @click="openAgentModal"

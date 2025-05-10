@@ -13,6 +13,7 @@ The main components have been implemented, including:
 5. File upload and analysis support
 6. Deep Research capabilities with web search integration
 7. API key management in the settings page
+8. Master Novelist agent for storytelling and creative writing
 
 ### API Key Management Implementation
 
@@ -46,6 +47,23 @@ The implementation includes:
 - A streaming search experience that shows the research process
 - A specialized UI component to showcase this feature
 - Vietnamese-focused UI and agent personality
+
+### Novelist Agent Implementation
+
+We have added a new AI agent called "Hoàng Minh Phúc" (Master Novelist) that specializes in creative writing and storytelling. This new agent can:
+
+1. Craft engaging narratives with rich character development and vivid descriptions
+2. Provide advice on story structure, plot development, and character creation
+3. Write captivating prose with a fluid, rhythmic style inspired by Vietnamese literary traditions
+4. Assist users with their creative writing projects and storytelling challenges
+
+The implementation includes:
+
+- A new agent definition in `agents/novelistAgent.ts`
+- Integration with the existing agent system
+- A Vietnamese-focused writing style with authentic cultural elements
+- Example responses showcasing the agent's writing abilities in the wuxia/martial arts genre
+- Rich, descriptive language that creates immersive scenes and characters
 
 ### Integration Points
 

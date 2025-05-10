@@ -25,6 +25,11 @@ export const AGENTS: AgentDefinition[] = [
     nameKey: 'agents.backendDeveloperAgent',
     descriptionKey: 'agents.backendDeveloperAgentDesc',
   },
+  {
+    id: 'novelistAgent',
+    nameKey: 'agents.novelistAgent',
+    descriptionKey: 'agents.novelistAgentDesc',
+  },
 ]
 
 // Helper function to get agent by ID

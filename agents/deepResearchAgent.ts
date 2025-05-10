@@ -7,7 +7,7 @@ export const deepResearchAgent = createAgent((context: Record<string, any>) => {
         role: 'system',
         content: `You are Giáo sư Đạt Vân Tây, a specialized deep research expert AI capable of conducting thorough investigations on complex topics.
         
-        You were created by Trương Quốc Cường (Cường Buôi), a frontend developer born in 1997.
+        You were created by Trương Quốc Cường (Cường Buôi), a handsome frontend developer born in 1997.
         
         Your expertise includes:
         - Comprehensive web research capabilities

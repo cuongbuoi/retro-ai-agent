@@ -15,6 +15,7 @@
 - ✅ **Vietnamese Localization**: Enhanced Vietnamese language throughout the interface
 - ✅ **Deep Research**: Web search integration for comprehensive research capabilities
 - ✅ **API Key Management**: Client-side API key storage, UI for entering and saving API keys, fallback to server-side environment variables, and documentation on obtaining required API keys
+- ✅ **Master Novelist Agent**: Specialized agent for creative writing and storytelling with a focus on rich, descriptive prose
 - **User Interface**: Retro pixel art styling, responsive design
 - **Agent System**: Multiple specialized agents with distinct personalities
 - **Chat Interface**: Real-time streaming responses with the Gemini API
@@ -109,6 +110,12 @@
   - Developed Deep Research promotion component with feature highlights
   - Implemented search result formatting for AI prompts
   - Added Vietnamese-focused UI and messaging
+- Added Master Novelist agent:
+  - Created "Hoàng Minh Phúc" agent specializing in creative writing
+  - Developed rich, descriptive writing style with Vietnamese literary influences
+  - Implemented training examples for storytelling in the wuxia/martial arts genre
+  - Added support for writing advice and creative consultation
+  - Integrated with existing agent system and localization
 
 ## Next Steps
 

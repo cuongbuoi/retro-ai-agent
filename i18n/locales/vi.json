@@ -38,7 +38,9 @@
     "frontendDeveloperAgent": "Lập trình viên Frontend",
     "frontendDeveloperAgentDesc": "Chuyên về triển khai UI/UX và công nghệ frontend",
     "backendDeveloperAgent": "Lập trình viên Backend",
-    "backendDeveloperAgentDesc": "Tập trung vào logic phía máy chủ và triển khai API"
+    "backendDeveloperAgentDesc": "Tập trung vào logic phía máy chủ và triển khai API",
+    "novelistAgent": "Nhà Văn Bậc Thầy",
+    "novelistAgentDesc": "Sáng tạo những câu chuyện cuốn hút với nhân vật sống động và thế giới đầy màu sắc"
   },
   "deepResearch": {
     "title": "Tính năng nghiên cứu chuyên sâu",
