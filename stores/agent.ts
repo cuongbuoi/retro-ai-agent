@@ -13,7 +13,7 @@ export const useAgentStore = defineStore('agent', {
     currentAgent: (state) => getAgentById(state.currentAgentId),
     currentAgentName: (state) => {
       const agent = getAgentById(state.currentAgentId)
-      return agent?.name || AGENTS[0]?.name
+      return agent?.nameKey || AGENTS[0]?.nameKey
     },
   },
   actions: {

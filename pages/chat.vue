@@ -3,11 +3,11 @@
     <div class="pixel-header py-2 bg-pink-600 border-b-4 border-black">
       <div class="flex items-center justify-between px-4">
         <div class="flex items-center">
-          <NuxtLink to="/" class="flex items-center">
+          <NuxtLink :to="localePath({ name: PATHS.HOME.name })" class="flex items-center">
             <div
               class="flex items-center justify-center bg-white rounded-md border-2 border-black text-pink-600 text-xs font-bold mr-2 px-2 py-1"
             >
-              Quay về
+              {{ $t('chat.back_to_home') }}
             </div>
           </NuxtLink>
         </div>
@@ -24,7 +24,7 @@
           class="agent-badge bg-white px-3 py-1 rounded-full border-2 border-black cursor-pointer"
           @click="openAgentModal"
         >
-          <span class="font-bold text-pink-600">{{ agentStore.currentAgentName }}</span>
+          <span class="font-bold text-pink-600">{{ t(agentStore.currentAgentName) }}</span>
           <span class="ml-1 text-gray-500">↓</span>
         </div>
       </div>
@@ -42,6 +42,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useAgentStore } from '~/stores/agent'
+import { PATHS } from '~/constants/routes'
 
 definePageMeta({
   layout: 'chat',
@@ -49,7 +50,8 @@ definePageMeta({
 
 const agentStore = useAgentStore()
 const agentModalRef = ref<InstanceType<typeof AgentSelectorModal> | null>(null)
-
+const localePath = useLocalePath()
+const { t } = useI18n()
 function openAgentModal() {
   if (agentModalRef.value) {
     agentModalRef.value.open()

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { AGENTS } from '~/constants/agents'
 import { useAgentStore } from '~/stores/agent'
+import { PATHS } from '~/constants/routes'
 
 definePageMeta({
   layout: 'default',
@@ -8,10 +9,16 @@ definePageMeta({
 
 const agentStore = useAgentStore()
 const agents = AGENTS
+const localePath = useLocalePath()
+const { t } = useI18n()
 
 function goToChat(agentId: string) {
   agentStore.setCurrentAgent(agentId)
-  navigateTo('/chat')
+  navigateTo(
+    localePath({
+      name: PATHS.CHAT.name,
+    }),
+  )
 }
 </script>
 
@@ -22,10 +29,10 @@ function goToChat(agentId: string) {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 max-w-6xl mx-auto mb-12">
           <div v-for="agent in agents" :key="agent.id" class="agent-card">
             <div class="pixel-box bg-white">
-              <h2 class="text-xl font-bold mb-2 text-pink-500">{{ agent.name }}</h2>
-              <p class="text-gray-600 mb-4">{{ agent.description }}</p>
+              <h2 class="text-xl font-bold mb-2 text-pink-500">{{ t(agent.nameKey) }}</h2>
+              <p class="text-gray-600 min-h-[100px] mb-4">{{ t(agent.descriptionKey) }}</p>
               <div class="text-center">
-                <PixelButton text="Chat ngay" @click="goToChat(agent.id)" />
+                <PixelButton :text="$t('chat.chat_now')" @click="goToChat(agent.id)" />
               </div>
             </div>
           </div>

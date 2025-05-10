@@ -1,11 +1,33 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-09',
-  modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', '@pinia/nuxt'],
+  modules: ['@nuxtjs/tailwindcss', '@vueuse/nuxt', '@pinia/nuxt', '@nuxtjs/i18n'],
   // Disable SSR for Edge Functions to avoid document reference errors
   ssr: false,
   nitro: {
     preset: 'vercel',
+  },
+  i18n: {
+    defaultLocale: 'en',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'user-locale',
+      redirectOn: 'root',
+      alwaysRedirect: true,
+    },
+    strategy: 'no_prefix',
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        file: 'en.json',
+      },
+      {
+        code: 'vi',
+        name: 'Tiếng Việt',
+        file: 'vi.json',
+      },
+    ],
   },
   routeRules: {
     // API routes must use SSR even with client-side app

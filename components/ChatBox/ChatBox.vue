@@ -156,7 +156,7 @@ const directStopAI = () => {
         class="bg-pink-400 p-3 flex justify-between items-center pixel-border border-b-4 border-black sticky top-0 z-10"
       >
         <h1 class="text-base font-normal text-white px-2 py-1">
-          Tán gẫu cùng <span class="text-purple-900 font-bold">Đạt Văn Tây</span>
+          {{ $t('chat.chat_with') }} <span class="text-purple-900 font-bold">Đạt Văn Tây</span>
         </h1>
       </header>
 
@@ -170,22 +170,20 @@ const directStopAI = () => {
             v-if="!messages.length"
             class="flex flex-col gap-5 text-center w-[500px] max-w-full mx-auto p-5 bg-pink-100 pixel-border border-4 border-black"
           >
-            <strong class="text-xl text-pink-500 mt-2">Tao là Đạt Văn Tây!</strong>
-            <p class="text-base text-pink-700 my-3">Tao là Giáo sư, cái nồi gì tao cũng biết</p>
+            <strong class="text-xl text-pink-500 mt-2">{{ $t('chat.agent_intro') }}</strong>
+            <p class="text-base text-pink-700 my-3">{{ $t('chat.agent_description') }}</p>
             <ul class="list-none text-left space-y-4 text-pink-700">
               <li class="flex items-start gap-2">
                 <span class="block text-xl">→</span>
-                <span class="text-sm"
-                  >Hỏi vài câu về lập trình, các dự án mà mày đang làm, các vấn đề mà mày đang gặp phải, ...</span
-                >
+                <span class="text-sm">{{ $t('chat.ask_about') }}</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="block text-xl">→</span>
-                <span class="text-sm">Đạt Văn Tây sẽ trả lời mày một cách dễ hiểu và chi tiết nhất.</span>
+                <span class="text-sm">{{ $t('chat.agent_help') }}</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="block text-xl">→</span>
-                <span class="text-sm">Gửi file để Đạt Văn Tây phân tích và giúp mày hiểu nội dung.</span>
+                <span class="text-sm">{{ $t('chat.file_upload_hint') }}</span>
               </li>
             </ul>
           </div>
@@ -215,8 +213,8 @@ const directStopAI = () => {
       >
         <div class="selected-files p-2 bg-pink-100 rounded pixel-border border-2 border-black mx-3 mb-0 shadow-lg">
           <div class="flex items-center justify-between mb-1">
-            <p class="text-xs text-pink-700">Đã tải lên file:</p>
-            <span class="text-xs text-pink-500 font-bold">{{ selectedFiles.length }} file</span>
+            <p class="text-xs text-pink-700">{{ $t('chat.uploaded_files') }}</p>
+            <span class="text-xs text-pink-500 font-bold">{{ selectedFiles.length }} {{ $t('chat.file') }}</span>
           </div>
           <div class="flex flex-wrap gap-2">
             <div
@@ -240,26 +238,25 @@ const directStopAI = () => {
       <footer class="p-3 bg-pink-200 pixel-border border-t-4 border-black sticky bottom-0 z-10">
         <div class="h-5 text-xs text-pink-700 mb-1">
           <span v-if="isAIResponding">
-            {{ usersTyping.map((user) => user.name).join(' và ') }} đang nhập tin nhắn...
+            {{ usersTyping.map((user) => user.name).join(' và ') }} {{ $t('chat.typing') }}
             <span class="text-xs text-red-600 ml-1">
-              (Bấm
+              ({{ $t('chat.stop_hint') }}
               <button @click="directStopAI" class="underline text-red-700 hover:text-red-900 transition-colors">
-                dừng
-              </button>
-              để nhập câu hỏi mới)
+                {{ $t('chat.stop') }}</button
+              >)
             </span>
           </span>
           <span v-else-if="usersTyping.length">
-            {{ usersTyping.map((user) => user.name).join(' và ') }} đang nhập tin nhắn...
+            {{ usersTyping.map((user) => user.name).join(' và ') }} {{ $t('chat.typing') }}
           </span>
-          <span v-else-if="isFileProcessing"> Đang xử lý file... </span>
+          <span v-else-if="isFileProcessing"> {{ $t('chat.processing_file') }} </span>
         </div>
         <div class="flex items-center gap-3">
           <form class="flex items-center gap-3 flex-1" @submit.prevent="sendMessage">
             <textarea
               ref="textArea"
               class="input w-full px-3 py-2 bg-pink-50 border-4 pixel-border border-black text-pink-700 focus:outline-none text-sm font-['SVN-Retron'] min-h-[52px] max-h-[150px] overflow-y-auto resize-none"
-              placeholder="Nhập tin nhắn..."
+              :placeholder="$t('chat.message_placeholder')"
               rows="1"
               @input="onTextareaInput"
               @keydown="onTextareaKeydown"
@@ -298,7 +295,7 @@ const directStopAI = () => {
                   type="button"
                   @click="handleStopAIResponse"
                   class="stop-button relative w-12 h-12 flex items-center justify-center bg-red-400 hover:bg-red-500 transition-colors pixel-border border-4 border-black"
-                  title="Dừng trả lời"
+                  :title="$t('chat.stop_response')"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -320,7 +317,7 @@ const directStopAI = () => {
 
               <div class="send-button-container">
                 <PixelButton
-                  :text="isAIResponding ? 'Đợi...' : 'Gửi'"
+                  :text="isAIResponding ? $t('chat.wait') : $t('chat.send')"
                   :color="isAIResponding ? 'emerald' : 'pink'"
                   size="chat"
                   @click="!isAIResponding && sendMessage()"

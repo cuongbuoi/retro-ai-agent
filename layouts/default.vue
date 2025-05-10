@@ -1,11 +1,16 @@
 <template>
   <div class="default-layout">
     <div class="pixel-bg"></div>
+    <AppNavigation />
     <div class="container mx-auto px-4 py-8">
       <header class="mb-8">
         <div class="text-center">
-          <h1 class="text-3xl md:text-4xl text-pink-600 font-bold pixel-title mb-2">Retro AI Agent Assistant</h1>
-          <p class="text-gray-600">Tán gẫu cùng trợ lý AI với phong cách retro đầy cá tính</p>
+          <h1 class="text-3xl md:text-4xl text-pink-600 font-bold pixel-title mb-2">
+            {{ $t('header.title') }}
+          </h1>
+          <p class="text-gray-600">
+            {{ $t('header.description') }}
+          </p>
         </div>
       </header>
 
@@ -14,7 +19,7 @@
       </main>
 
       <footer class="mt-12 text-center text-sm text-gray-500">
-        <p>© 2024 Retro AI Agent Assistant - Một ứng dụng AI phong cách pixel art</p>
+        <p>© {{ new Date().getFullYear() }} {{ $t('footer.copyright') }}</p>
       </footer>
     </div>
   </div>
@@ -22,11 +27,12 @@
 
 <style scoped>
 .default-layout {
-  min-height: 100vh;
+  min-height: calc(100vh - 67px);
   width: 100%;
   position: relative;
   background-color: #fdf2f8;
   padding-bottom: 20px;
+  margin-top: 67px;
   overflow-y: auto;
 }
 

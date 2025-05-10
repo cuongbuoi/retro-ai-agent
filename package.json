@@ -19,6 +19,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@nuxtjs/i18n": "9.5.4",
     "@pinia/nuxt": "0.11.0",
     "@tailwindcss/typography": "^0.5.9",
     "@typescript-eslint/eslint-plugin": "^8.32.0",

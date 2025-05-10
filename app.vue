@@ -1,3 +1,7 @@
+<script setup>
+// No need to import anything for locale storage since it's handled by the plugin
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtPage />

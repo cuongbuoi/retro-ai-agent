@@ -2,11 +2,15 @@
 import type { Message, User, FileAttachment } from '@/types'
 import { nanoid } from 'nanoid'
 import { processSSEData, processStreamChunk, processFileAttachments, readFileAsBase64 } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
 // Props
 const props = defineProps<{
   agent?: string
 }>()
+
+// Get i18n translations
+const { t } = useI18n()
 
 // Define users
 const me = ref<User>({
@@ -67,7 +71,7 @@ function stopAIResponse() {
   if (!streamingMessage.value) return
 
   // Cập nhật tin nhắn để chỉ ra rằng nó đã bị dừng
-  streamingMessage.value.text += '\n\n[Đã dừng trả lời]'
+  streamingMessage.value.text += '\n\n' + t('chat.response_stopped')
 
   // Hủy bỏ fetch request đang chạy
   if (abortController.value) {

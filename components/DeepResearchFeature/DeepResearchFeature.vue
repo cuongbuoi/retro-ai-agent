@@ -2,36 +2,35 @@
   <div class="deep-research-feature">
     <div class="bg-gray-800 p-4 rounded-lg border-2 border-gray-600 mb-6">
       <h2 class="text-xl mb-2 text-cyan-300 font-pixelated">
-        <span class="text-green-400">&#x25B6;</span> Tính năng nghiên cứu chuyên sâu
+        <span class="text-green-400">&#x25B6;</span> {{ $t('deepResearch.title') }}
       </h2>
       <p class="text-gray-300 mb-4">
-        Chuyên gia Giáo sư Đạt Vân Tây sử dụng công nghệ tìm kiếm web thông minh và khả năng phân tích tài liệu để cung
-        cấp thông tin chính xác và toàn diện.
+        {{ $t('deepResearch.description') }}
       </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="bg-gray-700 p-3 rounded border border-gray-500">
-          <h3 class="text-yellow-300 mb-2 font-pixelated">Tìm kiếm web tự động</h3>
+          <h3 class="text-yellow-300 mb-2 font-pixelated">{{ $t('deepResearch.feature1_title') }}</h3>
           <p class="text-gray-300 text-sm">
-            Tự động tìm kiếm web để lấy thông tin mới nhất và đáng tin cậy về chủ đề của bạn.
+            {{ $t('deepResearch.feature1_description') }}
           </p>
         </div>
         <div class="bg-gray-700 p-3 rounded border border-gray-500">
-          <h3 class="text-yellow-300 mb-2 font-pixelated">Phân tích nhiều nguồn</h3>
-          <p class="text-gray-300 text-sm">Tổng hợp thông tin từ nhiều nguồn để cung cấp cái nhìn toàn diện.</p>
+          <h3 class="text-yellow-300 mb-2 font-pixelated">{{ $t('deepResearch.feature2_title') }}</h3>
+          <p class="text-gray-300 text-sm">{{ $t('deepResearch.feature2_description') }}</p>
         </div>
         <div class="bg-gray-700 p-3 rounded border border-gray-500">
-          <h3 class="text-yellow-300 mb-2 font-pixelated">Tóm tắt thông minh</h3>
-          <p class="text-gray-300 text-sm">Chuyển đổi thông tin phức tạp thành hiểu biết rõ ràng, dễ hiểu.</p>
+          <h3 class="text-yellow-300 mb-2 font-pixelated">{{ $t('deepResearch.feature3_title') }}</h3>
+          <p class="text-gray-300 text-sm">{{ $t('deepResearch.feature3_description') }}</p>
         </div>
         <div class="bg-gray-700 p-3 rounded border border-gray-500">
-          <h3 class="text-yellow-300 mb-2 font-pixelated">Kiểm chứng sự thật</h3>
-          <p class="text-gray-300 text-sm">Xác minh thông tin từ nhiều nguồn để đảm bảo độ tin cậy.</p>
+          <h3 class="text-yellow-300 mb-2 font-pixelated">{{ $t('deepResearch.feature4_title') }}</h3>
+          <p class="text-gray-300 text-sm">{{ $t('deepResearch.feature4_description') }}</p>
         </div>
       </div>
       <div class="mt-4 flex justify-center">
         <PixelButton
           class="text-green-300"
-          text="Thử ngay với Giáo sư Đạt Vân Tây"
+          :text="$t('deepResearch.try_button')"
           :router-link="{ name: 'chat', query: { agent: 'deepResearchAgent' } }"
         />
       </div>

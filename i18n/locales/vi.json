@@ -1,0 +1,64 @@
+{
+  "common": {
+    "welcome": "Chào mừng đến với trợ lý AI Retro",
+    "language_changed": "Đã thay đổi ngôn ngữ thành công",
+    "settings": "Cài đặt",
+    "back_to_chat": "Quay lại Chat"
+  },
+  "settings": {
+    "interface_language": "Ngôn ngữ giao diện"
+  },
+  "agents": {
+    "deepResearchAgent": "Chuyên gia Nghiên cứu Sâu",
+    "deepResearchAgentDesc": "Chuyên về nghiên cứu toàn diện và tổng hợp thông tin",
+    "productManagerAgent": "Quản lý Sản phẩm",
+    "productManagerAgentDesc": "Xử lý yêu cầu sản phẩm và lập kế hoạch tính năng",
+    "frontendDeveloperAgent": "Lập trình viên Frontend",
+    "frontendDeveloperAgentDesc": "Chuyên về triển khai UI/UX và công nghệ frontend",
+    "backendDeveloperAgent": "Lập trình viên Backend",
+    "backendDeveloperAgentDesc": "Tập trung vào logic phía máy chủ và triển khai API"
+  },
+  "deepResearch": {
+    "title": "Tính năng nghiên cứu chuyên sâu",
+    "description": "Chuyên gia Giáo sư Đạt Vân Tây sử dụng công nghệ tìm kiếm web thông minh và khả năng phân tích tài liệu để cung cấp thông tin chính xác và toàn diện.",
+    "feature1_title": "Tìm kiếm web tự động",
+    "feature1_description": "Tự động tìm kiếm web để lấy thông tin mới nhất và đáng tin cậy về chủ đề của bạn.",
+    "feature2_title": "Phân tích nhiều nguồn",
+    "feature2_description": "Tổng hợp thông tin từ nhiều nguồn để cung cấp cái nhìn toàn diện.",
+    "feature3_title": "Tóm tắt thông minh",
+    "feature3_description": "Chuyển đổi thông tin phức tạp thành hiểu biết rõ ràng, dễ hiểu.",
+    "feature4_title": "Kiểm chứng sự thật",
+    "feature4_description": "Xác minh thông tin từ nhiều nguồn để đảm bảo độ tin cậy.",
+    "try_button": "Thử ngay với Giáo sư Đạt Vân Tây"
+  },
+  "chat": {
+    "chat_with": "Tán gẫu cùng",
+    "chat_now": "Chat ngay",
+    "agent_intro": "Tao là Đạt Văn Tây!",
+    "agent_description": "Tao là Giáo sư, cái nồi gì tao cũng biết",
+    "ask_about": "Hỏi vài câu về lập trình, các dự án mà mày đang làm, các vấn đề mà mày đang gặp phải, ...",
+    "agent_help": "Đạt Văn Tây sẽ trả lời mày một cách dễ hiểu và chi tiết nhất.",
+    "file_upload_hint": "Gửi file để Đạt Văn Tây phân tích và giúp mày hiểu nội dung.",
+    "uploaded_files": "Đã tải lên file:",
+    "file": "file",
+    "typing": "đang nhập tin nhắn...",
+    "stop_hint": "Bấm dừng để nhập câu hỏi mới",
+    "stop": "dừng",
+    "stop_response": "Dừng trả lời",
+    "processing_file": "Đang xử lý file...",
+    "message_placeholder": "Nhập tin nhắn...",
+    "wait": "Đợi...",
+    "send": "Gửi",
+    "response_stopped": "[Đã dừng trả lời]",
+    "select_agent": "Chọn Agent",
+    "close": "Đóng",
+    "back_to_home": "Quay lại"
+  },
+  "header": {
+    "title": "Trợ lý AI Retro",
+    "description": "Tán gẫu cùng trợ lý AI với phong cách retro đầy cá tính"
+  },
+  "footer": {
+    "copyright": "Trợ lý AI Retro - Một ứng dụng AI phong cách pixel art"
+  }
+}

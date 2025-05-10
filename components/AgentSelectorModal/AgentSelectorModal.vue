@@ -1,7 +1,7 @@
 <template>
   <dialog ref="modalRef" class="modal modal-bottom sm:modal-middle">
     <div class="modal-box bg-white border-4 border-black pixel-box">
-      <h3 class="font-bold text-xl text-pink-600 mb-4">Chọn Agent</h3>
+      <h3 class="font-bold text-xl text-pink-600 mb-4">{{ $t('chat.select_agent') }}</h3>
       <div class="grid grid-cols-1 gap-3">
         <div
           v-for="agent in agents"
@@ -11,20 +11,22 @@
           :class="{ 'border-pink-500 bg-pink-50': agent.id === agentStore.currentAgentId }"
         >
           <div class="flex-1">
-            <div class="font-bold text-gray-800">{{ agent.name }}</div>
-            <div class="text-sm text-gray-600">{{ agent.description }}</div>
+            <div class="font-bold text-gray-800">{{ $t(`agents.${agent.id}`) }}</div>
+            <div class="text-sm text-gray-600">{{ $t(`agents.${agent.id}Desc`) }}</div>
           </div>
           <div v-if="agent.id === agentStore.currentAgentId" class="text-pink-600 font-bold">✓</div>
         </div>
       </div>
       <div class="modal-action">
         <form method="dialog">
-          <button class="btn bg-pink-600 text-white border-2 border-black hover:bg-pink-700">Đóng</button>
+          <button class="btn bg-pink-600 text-white border-2 border-black hover:bg-pink-700">
+            {{ $t('chat.close') }}
+          </button>
         </form>
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button style="opacity: 0; width: 100%; height: 100%">Đóng</button>
+      <button style="opacity: 0; width: 100%; height: 100%">{{ $t('chat.close') }}</button>
     </form>
   </dialog>
 </template>
@@ -33,10 +35,12 @@
 import { ref, onMounted } from 'vue'
 import { AGENTS } from '~/constants/agents'
 import { useAgentStore } from '~/stores/agent'
+import { useI18n } from 'vue-i18n'
 
 const modalRef = ref<HTMLDialogElement | null>(null)
 const agents = AGENTS
 const agentStore = useAgentStore()
+const { t } = useI18n()
 
 const emit = defineEmits(['close'])
 
@@ -76,13 +80,11 @@ defineExpose({ open, close })
   transform: translateY(-2px);
 }
 
-/* Đảm bảo modal-box có z-index cao hơn backdrop */
 .modal-box {
   position: relative;
   z-index: 10;
 }
 
-/* Tăng kích thước vùng có thể click */
 .agent-option::after {
   content: '';
   position: absolute;

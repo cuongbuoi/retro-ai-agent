@@ -1,0 +1,64 @@
+{
+  "common": {
+    "welcome": "Welcome to Retro AI Agent Assistant",
+    "language_changed": "Language changed successfully",
+    "settings": "Settings",
+    "back_to_chat": "Back to Chat"
+  },
+  "settings": {
+    "interface_language": "Interface Language"
+  },
+  "agents": {
+    "deepResearchAgent": "Deep Research Expert",
+    "deepResearchAgentDesc": "Specializes in comprehensive research and information synthesis",
+    "productManagerAgent": "Product Manager",
+    "productManagerAgentDesc": "Handles product requirements and feature planning",
+    "frontendDeveloperAgent": "Frontend Developer",
+    "frontendDeveloperAgentDesc": "Specializes in UI/UX implementation and frontend technologies",
+    "backendDeveloperAgent": "Backend Developer",
+    "backendDeveloperAgentDesc": "Focuses on server-side logic and API implementation"
+  },
+  "deepResearch": {
+    "title": "Deep Research Feature",
+    "description": "Professor Đạt Văn Tây uses intelligent web search technology and document analysis capabilities to provide accurate and comprehensive information.",
+    "feature1_title": "Automated Web Search",
+    "feature1_description": "Automatically searches the web for the latest and most reliable information on your topic.",
+    "feature2_title": "Multi-Source Analysis",
+    "feature2_description": "Synthesizes information from multiple sources to provide a comprehensive view.",
+    "feature3_title": "Smart Summarization",
+    "feature3_description": "Transforms complex information into clear, easy-to-understand insights.",
+    "feature4_title": "Fact Checking",
+    "feature4_description": "Verifies information from multiple sources to ensure reliability.",
+    "try_button": "Try now with Professor Đạt Văn Tây"
+  },
+  "chat": {
+    "chat_with": "Chat with",
+    "chat_now": "Chat now",
+    "agent_intro": "I am Professor Đạt Văn Tây!",
+    "agent_description": "I'm a Professor, I know everything",
+    "ask_about": "Ask me about programming, your projects, issues you're facing...",
+    "agent_help": "Đạt Văn Tây will answer your questions in detail.",
+    "file_upload_hint": "Send files for Đạt Văn Tây to analyze and help you understand the content.",
+    "uploaded_files": "Uploaded files:",
+    "file": "file",
+    "typing": "is typing...",
+    "stop_hint": "Click stop to ask a new question",
+    "stop": "stop",
+    "stop_response": "Stop response",
+    "processing_file": "Processing file...",
+    "message_placeholder": "Type a message...",
+    "wait": "Wait...",
+    "send": "Send",
+    "response_stopped": "[Response stopped]",
+    "select_agent": "Select Agent",
+    "close": "Close",
+    "back_to_home": "Back to Home"
+  },
+  "header": {
+    "title": "Retro AI Agent Assistant",
+    "description": "Chat with Professor Đạt Văn Tây in a retro style"
+  },
+  "footer": {
+    "copyright": "Retro AI Agent Assistant - A pixel art AI application"
+  }
+}
