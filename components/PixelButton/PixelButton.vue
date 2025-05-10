@@ -43,8 +43,8 @@ const props = defineProps({
     default: false,
   },
   routerLink: {
-    type: Object,
-    default: null,
+    type: String,
+    default: '',
   },
 })
 
