@@ -3,6 +3,7 @@ import type { Message, User, FileAttachment } from '@/types'
 import { nanoid } from 'nanoid'
 import { processSSEData, processStreamChunk, processFileAttachments, readFileAsBase64 } from '@/utils'
 import { useI18n } from 'vue-i18n'
+import { useApiKeysStore } from '~/stores/apiKeys'
 
 // Props
 const props = defineProps<{
@@ -11,6 +12,9 @@ const props = defineProps<{
 
 // Get i18n translations
 const { t } = useI18n()
+
+// API keys store
+const apiKeysStore = useApiKeysStore()
 
 // Define users
 const me = ref<User>({
@@ -155,6 +159,10 @@ async function handleNewMessage(message: Message) {
       body: JSON.stringify({
         messages: messagesForApi.value,
         ...(props.agent && { agent: props.agent }),
+        // Add API keys from store if available
+        ...(apiKeysStore.geminiApiKey && { apiKey: apiKeysStore.geminiApiKey }),
+        ...(apiKeysStore.searchApiKey && { searchApiKey: apiKeysStore.searchApiKey }),
+        ...(apiKeysStore.searchEngineId && { searchEngineId: apiKeysStore.searchEngineId }),
       }),
       signal: abortController.value.signal,
     })

@@ -45,10 +45,29 @@ export const DEFAULT_AGENT = 'deepResearchAgent'
 
 /**
  * Initialize the AI client with API key
+ * @param requestApiKey Optional API key from the request payload
  */
-export function initializeAIClient() {
+export function initializeAIClient(requestApiKey?: string) {
   const config = useRuntimeConfig()
-  return new GoogleGenAI({ apiKey: config.GEMINI_API_KEY })
+
+  // Priority order:
+  // 1. API key from request payload (if provided)
+  // 2. API key from localStorage (client-side)
+  // 3. API key from .env config
+  let apiKey = requestApiKey || config.GEMINI_API_KEY
+
+  if (!requestApiKey && process.client) {
+    const storedKey = localStorage.getItem('geminiApiKey')
+    if (storedKey && storedKey.trim() !== '') {
+      apiKey = storedKey
+    }
+  }
+
+  if (!apiKey) {
+    throw new Error('Gemini API key is not configured')
+  }
+
+  return new GoogleGenAI({ apiKey })
 }
 
 /**
@@ -173,6 +192,7 @@ export function formatCompletionMessage(text: string) {
  */
 export async function streamResponse(ai: any, contents: AIContent[], response: any, isVercel: boolean) {
   try {
+    // Try to validate the API key by making the API call
     const streamingResponse = await ai.models.generateContentStream({
       model: MODEL_NAME,
       contents: contents,
@@ -203,9 +223,26 @@ export async function streamResponse(ai: any, contents: AIContent[], response: a
       message: formatCompletionMessage(fullText),
     })
   } catch (error: any) {
-    sendSSE(response, {
-      type: 'error',
-      error: error.message || 'Unknown error',
-    })
+    console.error('AI generation error:', error)
+
+    // Check for API key related errors
+    if (
+      error.message &&
+      (error.message.includes('API key') ||
+        error.message.includes('apiKey') ||
+        error.message.includes('authentication') ||
+        error.message.includes('401') ||
+        error.message.includes('403'))
+    ) {
+      sendSSE(response, {
+        type: 'error',
+        error: 'API key is invalid or expired. Please check your API key in Settings.',
+      })
+    } else {
+      sendSSE(response, {
+        type: 'error',
+        error: error.message || 'Unknown error',
+      })
+    }
   }
 }

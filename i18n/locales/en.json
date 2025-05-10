@@ -6,7 +6,29 @@
     "back_to_chat": "Back to Chat"
   },
   "settings": {
-    "interface_language": "Interface Language"
+    "interface_language": "Interface Language",
+    "api_keys": "API Keys",
+    "gemini_api_key": "Gemini API Key",
+    "search_api_key": "Search API Key",
+    "search_engine_id": "Search Engine ID",
+    "api_keys_saved": "API keys saved successfully",
+    "api_key_placeholder": "Enter your API key...",
+    "search_engine_id_placeholder": "Enter your Search Engine ID...",
+    "save_keys": "Save API Keys",
+    "reset_keys": "Reset Keys",
+    "get_gemini_api_key": "Get a Gemini API key from Google AI Studio",
+    "get_search_api_key": "Get a Search API key from Google Cloud Console",
+    "get_search_engine_id": "Set up a Custom Search Engine from Google Programmable Search Engine",
+    "api_key_status": {
+      "using_env": "No API key set, will use key from .env",
+      "key_saved": "API key saved",
+      "search_using_env": "No Search API key or Engine ID set, will use from .env",
+      "search_saved": "Search API key and Engine ID saved"
+    },
+    "api_errors": {
+      "invalid_gemini_key": "Invalid or expired API key. Please check your API key in Settings.",
+      "invalid_search_key": "Invalid Search API key or Engine ID"
+    }
   },
   "agents": {
     "deepResearchAgent": "Deep Research Expert",

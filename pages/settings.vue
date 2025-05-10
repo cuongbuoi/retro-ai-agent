@@ -1,6 +1,30 @@
 <script setup lang="ts">
+import { useApiKeysStore } from '~/stores/apiKeys'
+
 const { t, locale, locales, setLocale } = useI18n()
 const router = useRouter()
+const apiKeysStore = useApiKeysStore()
+
+// API key form data
+const apiKeys = reactive({
+  geminiApiKey: apiKeysStore.geminiApiKey || '',
+  searchApiKey: apiKeysStore.searchApiKey || '',
+  searchEngineId: apiKeysStore.searchEngineId || '',
+})
+
+// Status message for API keys
+const keyStatus = reactive({
+  gemini: computed(() => {
+    if (!apiKeys.geminiApiKey) return { text: t('settings.api_key_status.using_env'), color: 'text-yellow-400' }
+    return { text: t('settings.api_key_status.key_saved'), color: 'text-green-400' }
+  }),
+  search: computed(() => {
+    if (!apiKeys.searchApiKey || !apiKeys.searchEngineId) {
+      return { text: t('settings.api_key_status.search_using_env'), color: 'text-yellow-400' }
+    }
+    return { text: t('settings.api_key_status.search_saved'), color: 'text-green-400' }
+  }),
+})
 
 // Notification state
 const showNotification = ref(false)
@@ -24,6 +48,29 @@ const saveLanguage = (localeCode: string) => {
   setTimeout(() => {
     showNotification.value = false
   }, 3000)
+}
+
+// Save API keys
+const saveApiKeys = () => {
+  apiKeysStore.setGeminiApiKey(apiKeys.geminiApiKey)
+  apiKeysStore.setSearchApiKey(apiKeys.searchApiKey)
+  apiKeysStore.setSearchEngineId(apiKeys.searchEngineId)
+
+  notificationMessage.value = t('settings.api_keys_saved')
+  showNotification.value = true
+
+  // Hide notification after 3 seconds
+  setTimeout(() => {
+    showNotification.value = false
+  }, 3000)
+}
+
+// Reset API keys
+const resetApiKeys = () => {
+  apiKeysStore.resetApiKeys()
+  apiKeys.geminiApiKey = ''
+  apiKeys.searchApiKey = ''
+  apiKeys.searchEngineId = ''
 }
 
 // Handle return to chat
@@ -52,6 +99,7 @@ const goBackToChat = () => {
       </div>
     </div>
 
+    <!-- Language settings card -->
     <div class="settings-card mb-6 p-4 border-4 border-gray-700 bg-gray-800 rounded-lg shadow-md">
       <h2 class="text-xl mb-4 pb-2 border-b-2 border-gray-600 pixel-font">{{ t('settings.interface_language') }}</h2>
 
@@ -69,7 +117,86 @@ const goBackToChat = () => {
       </div>
     </div>
 
-    <!-- Additional settings sections can be added here -->
+    <!-- API Keys settings card -->
+    <div class="settings-card mb-6 p-4 border-4 border-gray-700 bg-gray-800 rounded-lg shadow-md">
+      <h2 class="text-xl mb-4 pb-2 border-b-2 border-gray-600 pixel-font">{{ t('settings.api_keys') }}</h2>
+
+      <div class="api-keys-form space-y-4">
+        <!-- Gemini API Key -->
+        <div class="form-group">
+          <label class="block mb-2">{{ t('settings.gemini_api_key') }}</label>
+          <input
+            v-model="apiKeys.geminiApiKey"
+            type="password"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-md px-3 py-2 text-white"
+            :placeholder="t('settings.api_key_placeholder')"
+          />
+          <div class="mt-1 text-sm text-gray-400">
+            <a href="https://ai.google.dev/" target="_blank" class="text-blue-400 hover:underline">
+              {{ t('settings.get_gemini_api_key') }} →
+            </a>
+          </div>
+          <!-- API key status -->
+          <div class="mt-1" :class="keyStatus.gemini.color">
+            {{ keyStatus.gemini.text }}
+          </div>
+        </div>
+
+        <!-- Search API Key -->
+        <div class="form-group">
+          <label class="block mb-2">{{ t('settings.search_api_key') }}</label>
+          <input
+            v-model="apiKeys.searchApiKey"
+            type="password"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-md px-3 py-2 text-white"
+            :placeholder="t('settings.api_key_placeholder')"
+          />
+          <div class="mt-1 text-sm text-gray-400">
+            <a
+              href="https://console.cloud.google.com/apis/credentials"
+              target="_blank"
+              class="text-blue-400 hover:underline"
+            >
+              {{ t('settings.get_search_api_key') }} →
+            </a>
+          </div>
+        </div>
+
+        <!-- Search Engine ID -->
+        <div class="form-group">
+          <label class="block mb-2">{{ t('settings.search_engine_id') }}</label>
+          <input
+            v-model="apiKeys.searchEngineId"
+            type="text"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-md px-3 py-2 text-white"
+            :placeholder="t('settings.search_engine_id_placeholder')"
+          />
+          <div class="mt-1 text-sm text-gray-400">
+            <a
+              href="https://programmablesearchengine.google.com/cse/all"
+              target="_blank"
+              class="text-blue-400 hover:underline"
+            >
+              {{ t('settings.get_search_engine_id') }} →
+            </a>
+          </div>
+          <!-- Search API status -->
+          <div class="mt-1" :class="keyStatus.search.color">
+            {{ keyStatus.search.text }}
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="flex justify-between mt-4">
+          <button @click="saveApiKeys" class="pixel-btn px-4 py-2 bg-green-700 hover:bg-green-600">
+            {{ t('settings.save_keys') }}
+          </button>
+          <button @click="resetApiKeys" class="pixel-btn px-4 py-2 bg-red-700 hover:bg-red-600">
+            {{ t('settings.reset_keys') }}
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -6,7 +6,29 @@
     "back_to_chat": "Quay lại Chat"
   },
   "settings": {
-    "interface_language": "Ngôn ngữ giao diện"
+    "interface_language": "Ngôn ngữ giao diện",
+    "api_keys": "Khóa API",
+    "gemini_api_key": "Khóa API Gemini",
+    "search_api_key": "Khóa API Tìm kiếm",
+    "search_engine_id": "ID Công cụ Tìm kiếm",
+    "api_keys_saved": "Đã lưu khóa API thành công",
+    "api_key_placeholder": "Nhập khóa API của bạn...",
+    "search_engine_id_placeholder": "Nhập ID Công cụ Tìm kiếm của bạn...",
+    "save_keys": "Lưu Khóa API",
+    "reset_keys": "Xóa Khóa",
+    "get_gemini_api_key": "Lấy khóa API Gemini từ Google AI Studio",
+    "get_search_api_key": "Lấy khóa API Tìm kiếm từ Google Cloud Console",
+    "get_search_engine_id": "Thiết lập Công cụ Tìm kiếm từ Google Programmable Search Engine",
+    "api_key_status": {
+      "using_env": "Chưa có API key, sẽ dùng key từ .env",
+      "key_saved": "Đã lưu API key",
+      "search_using_env": "Chưa có API key hoặc Search Engine ID, sẽ dùng từ .env",
+      "search_saved": "Đã lưu API key và Search Engine ID"
+    },
+    "api_errors": {
+      "invalid_gemini_key": "API key không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại API key trong phần Cài đặt.",
+      "invalid_search_key": "API key tìm kiếm hoặc ID công cụ tìm kiếm không hợp lệ"
+    }
   },
   "agents": {
     "deepResearchAgent": "Chuyên gia Nghiên cứu Sâu",

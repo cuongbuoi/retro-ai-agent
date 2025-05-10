@@ -42,7 +42,9 @@ export default defineEventHandler(async (event) => {
       return sendError(response, `Agent '${agentName}' doesn't exist`)
     }
 
-    const aiClient = initializeAIClient()
+    // Pass API key from request if it exists
+    const apiKey = body.apiKey || undefined
+    const aiClient = initializeAIClient(apiKey)
     const agentConfig = getAgentConfig(agentName, body)
     const prompt = buildPrompt(body.messages || [], agentConfig.messages)
 
@@ -59,7 +61,7 @@ export default defineEventHandler(async (event) => {
       if (lastUserMessage.role === 'user') {
         const query = lastUserMessage.content
         // Perform web search and get formatted results
-        const searchResults = await performWebSearchAndStream(query, response)
+        const searchResults = await performWebSearchAndStream(query, response, body.searchApiKey, body.searchEngineId)
 
         // Append search results to the prompt if we have text part
         if (searchResults && contents.length > 0 && 'text' in contents[0].parts[0]) {

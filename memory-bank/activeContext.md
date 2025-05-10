@@ -12,6 +12,23 @@ The main components have been implemented, including:
 4. Integration with the Google Gemini API
 5. File upload and analysis support
 6. Deep Research capabilities with web search integration
+7. API key management in the settings page
+
+### API Key Management Implementation
+
+We have added a new API key management section to the settings page, allowing users to:
+
+1. Enter and save their own API keys for Gemini and Google Search
+2. Get information about where to obtain the required API keys
+3. Reset the stored API keys if needed
+
+The implementation includes:
+
+- A new Pinia store (apiKeysStore) to manage API key storage in localStorage
+- Integration with the existing settings page UI
+- Modifications to the AI and search utilities to use client-side keys when available
+- Proper localization for both English and Vietnamese
+- Links to the appropriate Google services to obtain the API keys
 
 ### Deep Research Feature Implementation
 

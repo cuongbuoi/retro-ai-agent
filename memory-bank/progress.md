@@ -14,6 +14,7 @@
 - ✅ **UI Fixes**: Issues with file upload interface pushing elements off-screen have been fixed
 - ✅ **Vietnamese Localization**: Enhanced Vietnamese language throughout the interface
 - ✅ **Deep Research**: Web search integration for comprehensive research capabilities
+- ✅ **API Key Management**: Client-side API key storage, UI for entering and saving API keys, fallback to server-side environment variables, and documentation on obtaining required API keys
 - **User Interface**: Retro pixel art styling, responsive design
 - **Agent System**: Multiple specialized agents with distinct personalities
 - **Chat Interface**: Real-time streaming responses with the Gemini API
