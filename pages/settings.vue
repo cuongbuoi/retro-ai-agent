@@ -91,12 +91,6 @@ const goBackToChat = () => {
 
     <div class="settings-header mb-8 text-center">
       <h1 class="text-3xl mb-2 pixel-font">{{ t('common.settings') }}</h1>
-      <div class="flex justify-center">
-        <button @click="goBackToChat" class="back-button pixel-btn px-4 py-2 flex items-center">
-          <span>←</span>
-          <span class="ml-2">{{ t('common.back_to_chat') }}</span>
-        </button>
-      </div>
     </div>
 
     <!-- Language settings card -->
@@ -196,6 +190,12 @@ const goBackToChat = () => {
           </button>
         </div>
       </div>
+    </div>
+    <div class="flex justify-center mt-5">
+      <button @click="goBackToChat" class="back-button pixel-btn px-4 py-2 flex items-center">
+        <span>←</span>
+        <span class="ml-2">{{ t('common.back_to_chat') }}</span>
+      </button>
     </div>
   </div>
 </template>

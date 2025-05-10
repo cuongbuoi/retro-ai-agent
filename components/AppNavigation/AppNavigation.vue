@@ -21,6 +21,11 @@ const currentLocale = computed(() => {
         <span class="nav-text">Chat</span>
       </NuxtLink>
 
+      <NuxtLink :to="localePath({ name: PATHS.SETTINGS.name })" class="nav-link">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-text">{{ t('common.settings') }}</span>
+      </NuxtLink>
+
       <div class="dropdown dropdown-end language-dropdown">
         <div tabindex="0" role="button" class="lang-btn">
           <span class="nav-icon">🌐</span>
@@ -40,11 +45,6 @@ const currentLocale = computed(() => {
           </div>
         </div>
       </div>
-
-      <NuxtLink :to="localePath({ name: PATHS.SETTINGS.name })" class="nav-link">
-        <span class="nav-icon">⚙️</span>
-        <span class="nav-text">{{ t('common.settings') }}</span>
-      </NuxtLink>
     </div>
   </nav>
 </template>
