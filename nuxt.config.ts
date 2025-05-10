@@ -22,6 +22,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     GEMINI_API_KEY: process.env.NUXT_GEMINI_API_KEY, // Using API key from .env file
+    SEARCH_API_KEY: process.env.NUXT_SEARCH_API_KEY, // Google Search API key
+    SEARCH_ENGINE_ID: process.env.NUXT_SEARCH_ENGINE_ID, // Google Custom Search Engine ID
   },
   app: {
     head: {

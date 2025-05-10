@@ -6,6 +6,16 @@ export interface AgentDefinition {
 
 export const AGENTS: AgentDefinition[] = [
   {
+    id: 'deepResearchAgent',
+    name: 'Deep Research Expert',
+    description: 'Specializes in comprehensive research and information synthesis',
+  },
+  {
+    id: 'productManagerAgent',
+    name: 'Product Manager',
+    description: 'Handles product requirements and feature planning',
+  },
+  {
     id: 'frontendDeveloperAgent',
     name: 'Frontend Developer',
     description: 'Specializes in UI/UX implementation and frontend technologies',
@@ -14,11 +24,6 @@ export const AGENTS: AgentDefinition[] = [
     id: 'backendDeveloperAgent',
     name: 'Backend Developer',
     description: 'Focuses on server-side logic and API implementation',
-  },
-  {
-    id: 'productManagerAgent',
-    name: 'Product Manager',
-    description: 'Handles product requirements and feature planning',
   },
 ]
 

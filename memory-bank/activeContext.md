@@ -11,6 +11,33 @@ The main components have been implemented, including:
 3. Three specialized AI agents (Frontend, Backend, Product Manager)
 4. Integration with the Google Gemini API
 5. File upload and analysis support
+6. Deep Research capabilities with web search integration
+
+### Deep Research Feature Implementation
+
+We have added a new AI agent called "Giáo sư Đạt Vân Tây" (Deep Research Expert) that specializes in providing comprehensive research capabilities. This new agent can:
+
+1. Automatically search the web for information relevant to the user's query
+2. Analyze and synthesize information from multiple sources
+3. Present well-organized, structured responses with cited sources
+4. Handle complex research questions with depth and accuracy
+
+The implementation includes:
+
+- A new agent definition in `agents/deepResearchAgent.ts`
+- Integration with web search APIs via Google Custom Search
+- A streaming search experience that shows the research process
+- A specialized UI component to showcase this feature
+- Vietnamese-focused UI and agent personality
+
+### Integration Points
+
+The Deep Research feature integrates with the existing app through:
+
+- Agent registration in constants/agents.ts and agents/index.ts
+- Web search functionality in utils/search.ts
+- API enhancements in server/api/ai.ts to support search and streaming
+- UI component in components/DeepResearchFeature/DeepResearchFeature.vue
 
 ## Recent Changes
 
@@ -41,6 +68,12 @@ The main components have been implemented, including:
   - Implemented styling for disabled buttons (reduced opacity, grayscale effect)
   - Added proper handling for disabling click events when in disabled state
   - Ensured the hover and active effects don't trigger on disabled buttons
+- Added Deep Research feature:
+  - Implemented a new agent "Giáo sư Đạt Vân Tây" for comprehensive research
+  - Created web search integration using Google Custom Search API
+  - Developed streaming search experience with real-time updates
+  - Added a dedicated UI component to promote the Deep Research feature
+  - Integrated search results into AI prompts for better context
 
 ## Next Steps
 
@@ -72,10 +105,20 @@ The following items are prioritized for upcoming work:
    - Set up unit and integration tests
 
 5. **File Upload Improvements**:
+
    - Add file size limitations to prevent performance issues
    - Implement more robust error handling for failed uploads
    - Optimize file processing for large files
    - Add support for more file formats
+
+6. **Deep Research Enhancements**:
+
+   - Add document analysis capabilities to process uploaded files
+   - Implement memory for maintaining context across research sessions
+   - Add support for academic/scientific research with citation formats
+   - Create visualization tools for research insights
+   - Add fallback mechanisms for when search API is unavailable
+   - Implement search filtering options for more targeted results
 
 ## Active Decisions and Considerations
 
@@ -84,6 +127,7 @@ The following items are prioritized for upcoming work:
 3. **Response Quality**: Monitoring and improving the quality of AI responses for technical accuracy and helpfulness
 4. **Performance Optimization**: Considering ways to optimize streaming and rendering performance for smooth user experience
 5. **User Feedback**: Planning to implement a feedback mechanism to improve agent responses over time
+6. **Search API Management**: Handling API rate limits and keys for the Google Custom Search integration
 
 ### Localization Strategy
 
@@ -104,6 +148,16 @@ We're using a client-side approach to file handling:
 
 This approach minimizes server load since files are processed on the client side before being sent to the API. However, it does increase the payload size for API requests, which could impact performance for very large files.
 
+### Search Integration Strategy
+
+For the Deep Research feature, we've implemented a web search integration that:
+
+- Uses the Google Custom Search API to perform web searches
+- Streams search status updates to the user in real-time
+- Formats search results into a structured format for the AI model
+- Enhances the AI prompt with relevant web information
+- Maintains Vietnamese language compatibility throughout the process
+
 ### UX Considerations
 
 - Added file attachment previews in chat bubbles to provide visual confirmation
@@ -113,6 +167,8 @@ This approach minimizes server load since files are processed on the client side
 - Fixed layout issues to ensure the interface is always usable regardless of file upload status
 - Enhanced button and UI element sizes for better usability
 - Used culturally appropriate Vietnamese phrases and expressions
+- Added search progress indicators for the Deep Research feature
+- Designed the Deep Research feature UI to match the retro aesthetic
 
 ### Technical Debt
 
@@ -123,14 +179,18 @@ Current implementation has some limitations:
 - File processing is synchronous and might block the UI thread for large files
 - No current limitation on file size or number of attachments
 - Incomplete Vietnamese localization in some dynamic content sections
+- Search API keys need secure management and rate limiting
+- Error handling for search failures needs improvement
+- No caching mechanism for search results
 
 These issues will be addressed in future iterations as we continue to develop and refine the application.
 
 ## Current Challenges
 
-1. **API Rate Limits**: Managing Google Gemini API rate limits, especially during development and testing
+1. **API Rate Limits**: Managing Google Gemini API and Google Search API rate limits, especially during development and testing
 2. **Response Time**: Optimizing response time while maintaining quality of AI-generated content
 3. **Balance of Personality vs. Utility**: Finding the right balance between agent personality and technical utility
 4. **Edge Cases**: Handling various edge cases in user queries and agent responses
 5. **Testing Strategy**: Developing an effective testing strategy for AI-driven applications
 6. **Cultural Adaptation**: Ensuring the Vietnamese version maintains cultural relevance and natural language patterns
+7. **Search Quality**: Ensuring search results are relevant and helpful for the user's query

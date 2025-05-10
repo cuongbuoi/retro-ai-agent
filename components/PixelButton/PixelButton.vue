@@ -1,6 +1,12 @@
 <template>
   <div class="pixel-button-wrapper" :class="[size]">
+    <NuxtLink v-if="routerLink" :to="routerLink" class="nuxt-link">
+      <button :class="['pixel-button', colorClass, { disabled: disabled }]" :type="type" :disabled="disabled">
+        <div class="button-text">{{ text }}</div>
+      </button>
+    </NuxtLink>
     <button
+      v-else
       :class="['pixel-button', colorClass, { disabled: disabled }]"
       @click="handleClick"
       :type="type"
@@ -35,6 +41,10 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
+  },
+  routerLink: {
+    type: Object,
+    default: null,
   },
 })
 
@@ -89,6 +99,11 @@ const colorClass = computed(() => {
   image-rendering: pixelated;
   min-width: 80px;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.nuxt-link {
+  text-decoration: none;
+  display: inline-flex;
 }
 
 /* Disabled state styles */

@@ -13,6 +13,12 @@
 - ✅ **File Upload**: Users can upload images and text files for AI processing
 - ✅ **UI Fixes**: Issues with file upload interface pushing elements off-screen have been fixed
 - ✅ **Vietnamese Localization**: Enhanced Vietnamese language throughout the interface
+- ✅ **Deep Research**: Web search integration for comprehensive research capabilities
+- **User Interface**: Retro pixel art styling, responsive design
+- **Agent System**: Multiple specialized agents with distinct personalities
+- **Chat Interface**: Real-time streaming responses with the Gemini API
+- **File Upload**: Basic support for uploading and analyzing image files
+- **Deep Research**: New agent with web search capabilities for comprehensive research
 
 ## In Progress
 
@@ -24,8 +30,22 @@
 - 🔄 **Voice Input**: Adding support for voice input
 - 🔄 **Response History**: Implementing the ability to view past responses
 - 🔄 **Complete Localization**: Extending Vietnamese language to all dynamic content
+- 🔄 **Search Enhancements**: Improving search result quality and error handling
 
 ## What's Left to Build
+
+### High Priority
+
+1. **User Authentication**: Implement user accounts and session persistence
+2. **History Management**: Save chat history and allow users to revisit previous conversations
+3. **Multilingual Support**: Improve non-English language handling
+4. **Deep Research Enhancements**:
+   - Add document analysis for uploaded research materials
+   - Implement citation system for academic responses
+   - Add search filtering options for more specific queries
+   - Create visualization tools for research insights
+
+### Medium Priority
 
 - ❌ **User Settings**: User preferences for language, theme, etc.
 - ❌ **Additional Agents**: More specialized AI agents for different domains
@@ -34,10 +54,11 @@
 - ❌ **Testing Suite**: Comprehensive testing for components and API integration
 - ❌ **Documentation**: User and developer documentation
 - ❌ **Performance Optimizations**: Caching, lazy loading, and other performance improvements
+- ❌ **Search Caching**: Implement caching for search results to reduce API usage
 
 ## Current Status
 
-- **Version**: 1.0.2
+- **Version**: 1.0.3
 - **Stability**: Beta
 - **Active Development**: Yes
 - **Ready for Basic Use**: Yes
@@ -45,12 +66,13 @@
 
 ## Known Issues
 
-1. **API Rate Limiting**: May hit Gemini API rate limits with heavy usage
+1. **API Rate Limiting**: May hit Gemini API and Search API rate limits with heavy usage
 2. **Response Time**: Initial responses may take a few seconds to begin streaming
 3. **Code Formatting**: Code blocks in responses may not always have proper formatting
 4. **Error Recovery**: Limited error recovery mechanisms for API failures
 5. **Large File Processing**: Large files may take time to process and could impact performance
 6. **Incomplete Localization**: Some dynamic content still needs Vietnamese translation
+7. **Search Stability**: Web search may fail due to API issues or rate limits
 
 ## Upcoming Releases
 
@@ -79,6 +101,13 @@
   - Updated typing indicator messages to Vietnamese
   - Added "Chọn agent" label to agent selector
   - Adjusted UI element sizes for better Vietnamese text display
+- Implemented Deep Research feature:
+  - Added new "Giáo sư Đạt Vân Tây" agent for comprehensive research
+  - Integrated web search capabilities using Google Custom Search API
+  - Created streaming search experience showing real-time progress
+  - Developed Deep Research promotion component with feature highlights
+  - Implemented search result formatting for AI prompts
+  - Added Vietnamese-focused UI and messaging
 
 ## Next Steps
 
@@ -89,3 +118,9 @@
 - Complete Vietnamese translation across all interface elements
 - Enhance agent prompts to better support Vietnamese conversations
 - Consider adding Vietnamese-specific agent personalities
+- Enhance Deep Research with more features:
+  - Add search filtering options
+  - Implement document analysis integration
+  - Create citation formatting for academic contexts
+  - Add search result caching to improve performance
+  - Enhance error handling for search failures

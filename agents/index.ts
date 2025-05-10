@@ -2,6 +2,7 @@
 export * from './frontendDeveloperAgent'
 export * from './backendDeveloperAgent'
 export * from './productManagerAgent'
+export * from './deepResearchAgent'
 
 // Import agent types from constants
 import type { AgentId } from '~/constants/agents'

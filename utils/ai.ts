@@ -41,7 +41,7 @@ export interface AIContent {
 
 // Constants
 export const MODEL_NAME = 'gemini-2.0-flash'
-export const DEFAULT_AGENT = 'frontendDeveloperAgent'
+export const DEFAULT_AGENT = 'deepResearchAgent'
 
 /**
  * Initialize the AI client with API key

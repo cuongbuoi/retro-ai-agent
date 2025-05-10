@@ -35,3 +35,9 @@ export * from './ai'
 
 // Export chat utility functions
 export * from './chat'
+
+// Export search utility functions
+export * from './search'
+
+// Define file buffer size for attachment processing
+export const MAX_FILE_SIZE = 1024 * 1024 * 10 // 10MB

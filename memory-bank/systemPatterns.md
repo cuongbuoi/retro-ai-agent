@@ -8,6 +8,7 @@ The application follows a client-server architecture using Nuxt.js as the framew
 flowchart TB
     Client[Client Browser] <--> NuxtServer[Nuxt Server]
     NuxtServer <--> AIService[Google Gemini API]
+    NuxtServer <--> SearchAPI[Google Custom Search API]
 ```
 
 ## Component Architecture
@@ -20,6 +21,7 @@ flowchart TB
     ChatWidget --> ChatBox[ChatBox.vue]
     ChatBox --> ChatBubble[ChatBubble.vue]
     ChatBox --> PixelButton[PixelButton.vue]
+    App --> DeepResearchFeature[DeepResearchFeature.vue]
 ```
 
 - **App.vue**: Main application container
@@ -27,6 +29,7 @@ flowchart TB
 - **ChatBox.vue**: UI container for messages and input
 - **ChatBubble.vue**: Individual message display
 - **PixelButton.vue**: Reusable button component with pixel styling
+- **DeepResearchFeature.vue**: Promotional component for Deep Research capability
 
 ## Agent System
 
@@ -37,6 +40,7 @@ flowchart LR
     AgentIndex[agents/index.ts] --> Agent1[frontendDeveloperAgent.ts]
     AgentIndex --> Agent2[debuggingAgent.ts]
     AgentIndex --> Agent3[backendDeveloperAgent.ts]
+    AgentIndex --> Agent4[deepResearchAgent.ts]
 ```
 
 Agents are defined with customizable system prompts and can be selected at runtime, allowing the application to serve different use cases with the same core functionality.
@@ -58,6 +62,33 @@ sequenceDiagram
 ```
 
 This pattern provides a responsive user experience with immediate feedback as the AI generates its response.
+
+## Web Search Pattern
+
+For the Deep Research feature, the application implements a web search pattern that enriches AI responses with real-time information.
+
+```mermaid
+sequenceDiagram
+    Client->>Server: POST /api/ai (with agent=deepResearchAgent)
+    Server->>SearchAPI: Perform web search (Google Custom Search)
+    Server->>Client: SSE event (search in progress)
+    SearchAPI->>Server: Return search results
+    Server->>Client: SSE event (search complete)
+    Server->>AI Service: Generate response with search results
+    loop For each token
+        AI Service->>Server: Stream token
+        Server->>Client: SSE event with token
+    end
+    Server->>Client: Complete event
+```
+
+Key characteristics of this pattern:
+
+1. Web search is performed server-side via Google Custom Search API
+2. Search progress is streamed to the client in real-time
+3. Search results are formatted and added to the AI prompt
+4. The entire process maintains the streaming nature of the application
+5. Status messages provide transparency during the search process
 
 ## Localization Pattern
 

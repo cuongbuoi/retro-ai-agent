@@ -17,6 +17,7 @@
 - **Edge Runtime**: For server-side streaming response handling
 - **Nuxt API Routes**: Server endpoints for AI communication
 - **Google Gemini API**: AI model service for generating responses
+- **Google Custom Search API**: Web search service for the Deep Research feature
 - **Server-Sent Events (SSE)**: Protocol for streaming real-time updates
 
 ### AI Services
@@ -36,13 +37,15 @@
 - Node.js (v18+)
 - npm or yarn
 - GEMINI_API_KEY from Google AI Studio
+- SEARCH_API_KEY and SEARCH_ENGINE_ID from Google Custom Search Console
 
 ### Installation
 
 1. Clone the repository
 2. Install dependencies with `npm install` or `yarn`
 3. Copy `.env.example` to `.env` and add your GEMINI_API_KEY
-4. Run the development server with `npm run dev`
+4. Add SEARCH_API_KEY and SEARCH_ENGINE_ID to your `.env` file
+5. Run the development server with `npm run dev`
 
 ## Key Technical Decisions
 
@@ -80,6 +83,16 @@ The application supports both English and Vietnamese with a hybrid approach:
 - Cultural adaptation of UI elements and expressions
 - Plans for a more systematic i18n implementation in future releases
 
+### 7. Web Search Integration
+
+The Deep Research feature integrates with Google Custom Search API:
+
+- Server-side search requests to maintain API key security
+- Streaming status updates to provide real-time feedback
+- Formatted search results injected into AI prompts
+- Vietnamese-compatible messaging for search progress
+- Error handling for search failures
+
 ## Technical Constraints
 
 ### API Limitations
@@ -87,6 +100,8 @@ The application supports both English and Vietnamese with a hybrid approach:
 - Gemini API has token limits that may affect very long conversations
 - API key security must be maintained via server-side processing
 - Streaming responses require specific handling for different environments
+- Google Custom Search API has daily query limits
+- Search API requires proper error handling for failed searches
 
 ### Browser Compatibility
 
@@ -100,6 +115,7 @@ The application supports both English and Vietnamese with a hybrid approach:
 - Client-side file processing may be resource-intensive for large files
 - No current limitation on file size or number of attachments
 - Vietnamese text may require additional rendering considerations
+- Web search adds latency to response generation for the Deep Research agent
 
 ## Integration Points
 
@@ -111,6 +127,15 @@ The application integrates with the Google Gemini API for AI capabilities:
 - Implementing streaming with generateContentStream
 - Supporting both text and image inputs through content parts
 - Leveraging Gemini's multilingual capabilities for Vietnamese support
+
+### Google Custom Search API
+
+The application integrates with Google Custom Search for the Deep Research feature:
+
+- Using the Google Custom Search JSON API endpoint
+- Configuring a custom search engine for relevant results
+- Formatting search results into structured data for AI context
+- Streaming search progress updates to the client
 
 ### Deployment Platforms
 
@@ -125,6 +150,7 @@ The application is configured for deployment on:
 - End-to-end testing with Cypress (planned)
 - Manual testing for AI interaction quality
 - Localization testing for Vietnamese content and layout
+- Search integration testing for result quality and error handling
 
 ## Security Considerations
 
@@ -132,12 +158,14 @@ The application is configured for deployment on:
 - No sensitive data is stored client-side
 - File uploads are processed client-side to avoid storage concerns
 - Input validation to prevent injection attacks
+- Search queries are sanitized to prevent injection attacks
 
 ## Monitoring and Logging
 
 - Basic error logging implemented
 - More comprehensive monitoring planned for production
 - Localization issues tracking
+- Search API usage monitoring
 
 ## Future Technical Improvements
 
@@ -146,3 +174,5 @@ The application is configured for deployment on:
 - Optimize file handling for large files
 - Improve error recovery mechanisms
 - Implement comprehensive testing suite
+- Add caching for search results to reduce API usage
+- Implement search result filtering for more targeted research

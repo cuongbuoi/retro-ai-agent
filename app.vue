@@ -1,8 +1,7 @@
 <template>
-  <div class="pixel-app">
-    <div class="pixel-bg"></div>
+  <NuxtLayout>
     <NuxtPage />
-  </div>
+  </NuxtLayout>
 </template>
 
 <style>

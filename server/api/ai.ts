@@ -12,7 +12,9 @@ import {
   getAgentConfig,
   buildPrompt,
   streamResponse,
+  performWebSearchAndStream,
 } from '@/utils'
+import type { TextPart } from '@/utils'
 
 /**
  * Main API handler for AI chat functionality
@@ -49,6 +51,25 @@ export default defineEventHandler(async (event) => {
 
     // Begin streaming response
     sendSSE(response, { type: 'start' })
+
+    // For deep research agent, perform web search if appropriate
+    if (agentName === 'deepResearchAgent' && body.messages && body.messages.length > 0) {
+      // Get the last user message to use as search query
+      const lastUserMessage = body.messages[body.messages.length - 1]
+      if (lastUserMessage.role === 'user') {
+        const query = lastUserMessage.content
+        // Perform web search and get formatted results
+        const searchResults = await performWebSearchAndStream(query, response)
+
+        // Append search results to the prompt if we have text part
+        if (searchResults && contents.length > 0 && 'text' in contents[0].parts[0]) {
+          const textPart = contents[0].parts[0] as TextPart
+          textPart.text = `${textPart.text}\n\n${searchResults}`
+        }
+      }
+    }
+
+    // Stream AI response
     await streamResponse(aiClient, contents, response, isVercel)
 
     response.end()
