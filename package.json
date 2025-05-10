@@ -19,6 +19,7 @@
     "format:check": "prettier --check ."
   },
   "devDependencies": {
+    "@pinia/nuxt": "0.11.0",
     "@tailwindcss/typography": "^0.5.9",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
@@ -27,6 +28,7 @@
     "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-vue": "^10.1.0",
     "nuxt": "^3.8.2",
+    "pinia": "^3.0.2",
     "prettier": "^3.5.3",
     "rollup": "^4.9.0",
     "typescript": "^5.8.3",

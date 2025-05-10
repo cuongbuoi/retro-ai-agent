@@ -20,30 +20,41 @@
         <div class="w-10 h-10"><!-- Empty div for balance --></div>
       </div>
       <div class="flex justify-center mt-1">
-        <div class="agent-badge bg-white px-3 py-1 rounded-full border-2 border-black">
-          <span class="font-bold text-pink-600">{{ currentAgentName }}</span>
+        <div
+          class="agent-badge bg-white px-3 py-1 rounded-full border-2 border-black cursor-pointer"
+          @click="openAgentModal"
+        >
+          <span class="font-bold text-pink-600">{{ agentStore.currentAgentName }}</span>
+          <span class="ml-1 text-gray-500">↓</span>
         </div>
       </div>
     </div>
 
     <div class="flex-1 flex overflow-hidden">
-      <ChatWidget class="flex-1 flex flex-col" :agent="currentAgentId" />
+      <ChatWidget class="flex-1 flex flex-col" :agent="agentStore.currentAgentId" />
     </div>
+
+    <!-- Use the AgentSelectorModal component -->
+    <AgentSelectorModal ref="agentModalRef" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { getAgentById } from '~/constants/agents'
+import { ref } from 'vue'
+import { useAgentStore } from '~/stores/agent'
 
 definePageMeta({
   layout: 'chat',
 })
 
-const route = useRoute()
-const currentAgentId = computed(() => (route.query.agent as string) || 'frontendDeveloperAgent')
-const currentAgent = computed(() => getAgentById(currentAgentId.value))
-const currentAgentName = computed(() => currentAgent.value?.name || 'Frontend Developer')
+const agentStore = useAgentStore()
+const agentModalRef = ref<InstanceType<typeof AgentSelectorModal> | null>(null)
+
+function openAgentModal() {
+  if (agentModalRef.value) {
+    agentModalRef.value.open()
+  }
+}
 </script>
 
 <style scoped>
@@ -61,5 +72,10 @@ const currentAgentName = computed(() => currentAgent.value?.name || 'Frontend De
 
 .agent-badge {
   box-shadow: 2px 2px 0 #000;
+  transition: transform 0.2s ease;
+}
+
+.agent-badge:hover {
+  transform: scale(1.05);
 }
 </style>

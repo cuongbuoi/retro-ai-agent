@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import { AGENTS } from '~/constants/agents'
+import { useAgentStore } from '~/stores/agent'
 
 definePageMeta({
   layout: 'default',
 })
 
+const agentStore = useAgentStore()
 const agents = AGENTS
+
+function goToChat(agentId: string) {
+  agentStore.setCurrentAgent(agentId)
+  navigateTo('/chat')
+}
 </script>
 
 <template>
@@ -18,7 +25,7 @@ const agents = AGENTS
               <h2 class="text-xl font-bold mb-2 text-pink-500">{{ agent.name }}</h2>
               <p class="text-gray-600 mb-4">{{ agent.description }}</p>
               <div class="text-center">
-                <PixelButton text="Chat ngay" :router-link="{ name: 'chat', query: { agent: agent.id } }" />
+                <PixelButton text="Chat ngay" @click="goToChat(agent.id)" />
               </div>
             </div>
           </div>

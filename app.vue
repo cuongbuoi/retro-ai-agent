@@ -81,6 +81,7 @@ button {
     10px 10px,
     0 10px
   );
+  pointer-events: none;
 }
 
 .pixel-title {
