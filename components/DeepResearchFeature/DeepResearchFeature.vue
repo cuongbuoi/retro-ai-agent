@@ -28,19 +28,30 @@
         </div>
       </div>
       <div class="mt-4 flex justify-center">
-        <PixelButton
-          class="text-green-300"
-          :text="$t('deepResearch.try_button')"
-          :router-link="localePath({ name: 'chat' })"
-        />
+        <PixelButton class="text-green-300" :text="$t('deepResearch.try_button')" @click="goToChat(agents[0].id)" />
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { AGENTS } from '~/constants/agents'
+import { PATHS } from '~/constants/routes'
+
 const { t } = useI18n()
+
+const agentStore = useAgentStore()
+const agents = AGENTS
 const localePath = useLocalePath()
+
+const goToChat = (agentId: string) => {
+  agentStore.setCurrentAgent(agentId)
+  navigateTo(
+    localePath({
+      name: PATHS.CHAT.name,
+    }),
+  )
+}
 </script>
 
 <style scoped>

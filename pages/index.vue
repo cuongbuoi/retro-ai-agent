@@ -12,7 +12,7 @@ const agents = AGENTS
 const localePath = useLocalePath()
 const { t } = useI18n()
 
-function goToChat(agentId: string) {
+const goToChat = (agentId: string) => {
   agentStore.setCurrentAgent(agentId)
   navigateTo(
     localePath({
