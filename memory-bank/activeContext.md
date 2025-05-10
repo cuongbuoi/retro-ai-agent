@@ -36,6 +36,11 @@ The main components have been implemented, including:
   - Updated typing indicators to use Vietnamese language patterns
   - Added Vietnamese label for agent selection
   - Improved UI styling for better Vietnamese text display
+- Enhanced the PixelButton component:
+  - Added a disabled state property to control button interactivity
+  - Implemented styling for disabled buttons (reduced opacity, grayscale effect)
+  - Added proper handling for disabling click events when in disabled state
+  - Ensured the hover and active effects don't trigger on disabled buttons
 
 ## Next Steps
 

@@ -3,8 +3,11 @@ export * from './frontendDeveloperAgent'
 export * from './backendDeveloperAgent'
 export * from './productManagerAgent'
 
+// Import agent types from constants
+import type { AgentId } from '~/constants/agents'
+
 // and register types here
-export type Agent = 'frontendDeveloperAgent' | 'backendDeveloperAgent' | 'productManagerAgent'
+export type Agent = AgentId
 
 // Define interfaces for the agent options
 export interface RequestOptions {

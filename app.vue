@@ -28,7 +28,7 @@ body {
   height: 100vh;
   width: 100vw;
   background-color: #fdf2f8;
-  overflow: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }

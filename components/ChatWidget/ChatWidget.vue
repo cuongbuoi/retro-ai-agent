@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Message, User, FileAttachment } from '@/types'
 import { nanoid } from 'nanoid'
+import { processSSEData, processStreamChunk, processFileAttachments, readFileAsBase64 } from '@/utils'
 
 // Props
 const props = defineProps<{
@@ -27,6 +28,7 @@ const usersTyping = ref<User[]>([])
 const fileInputRef = ref<HTMLInputElement | null>(null)
 const selectedFiles = ref<FileAttachment[]>([])
 const isFileProcessing = ref(false)
+const abortController = ref<AbortController | null>(null)
 
 // Format messages for API - only send last 2 messages to reduce payload size
 const messagesForApi = computed(() =>
@@ -54,76 +56,38 @@ const messagesForApi = computed(() =>
     .slice(-2),
 )
 
-// Process SSE data events
-const processSSEData = (data: any) => {
-  switch (data.type) {
-    case 'start':
-      console.log('Stream started')
-      break
-
-    case 'chunk':
-      if (streamingMessage.value && data.content) {
-        streamingMessage.value.text += data.content
-      }
-      break
-
-    case 'complete':
-      if (data.message?.choices?.[0]?.message) {
-        const finalMessage = {
-          id: data.message.id || nanoid(),
-          userId: bot.value.id,
-          createdAt: new Date(),
-          text: data.message.choices[0].message.content,
-        }
-
-        // Replace streaming message with final message
-        const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
-
-        if (index !== -1) {
-          messages.value[index] = finalMessage
-        } else {
-          messages.value.push(finalMessage)
-        }
-
-        streamingMessage.value = null
-      }
-      break
-
-    case 'error':
-      console.error('Streaming error:', data.error)
-      if (streamingMessage.value) {
-        streamingMessage.value.text += `\n\nError: ${data.error}`
-      }
-      break
-  }
-}
-
-// Process SSE stream chunks
-const processStreamChunk = (buffer: string, decoder: TextDecoder, chunk: Uint8Array) => {
-  // Append new decoded text to buffer
-  const newBuffer = buffer + decoder.decode(chunk, { stream: true })
-
-  // Split buffer into complete messages
-  const messageChunks = newBuffer.split('\n\n')
-
-  // Keep the last potentially incomplete chunk in buffer
-  const remainingBuffer = messageChunks.pop() || ''
-
-  // Process all complete messages
-  for (const messageText of messageChunks) {
-    if (messageText.trim() === '') continue
-
-    if (messageText.startsWith('data: ')) {
-      try {
-        const data = JSON.parse(messageText.substring(6))
-        processSSEData(data)
-      } catch (e) {
-        console.error('Error parsing SSE data:', e)
-      }
-    }
+// Stop the AI response
+function stopAIResponse() {
+  // Nếu không có streaming message nhưng vẫn có usersTyping (bot), cũng cần xử lý
+  if (!streamingMessage.value && usersTyping.value.length > 0) {
+    usersTyping.value = []
+    return
   }
 
-  return remainingBuffer
+  if (!streamingMessage.value) return
+
+  // Cập nhật tin nhắn để chỉ ra rằng nó đã bị dừng
+  streamingMessage.value.text += '\n\n[Đã dừng trả lời]'
+
+  // Hủy bỏ fetch request đang chạy
+  if (abortController.value) {
+    abortController.value.abort()
+    abortController.value = null
+  }
+
+  // Lưu và cập nhật tin nhắn đã dừng
+  const finalMessage = { ...streamingMessage.value }
+  const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
+
+  if (index !== -1) {
+    messages.value[index] = finalMessage
+  } else {
+    messages.value.push(finalMessage)
+  }
+
+  // Reset trạng thái
+  streamingMessage.value = null
+  usersTyping.value = []
 }
 
 // Handle file selection
@@ -135,40 +99,12 @@ async function handleFileSelect(event: Event) {
   selectedFiles.value = []
 
   try {
-    for (let i = 0; i < input.files.length; i++) {
-      const file = input.files[i]
-
-      // Process file
-      const fileContent = await readFileAsBase64(file)
-
-      selectedFiles.value.push({
-        id: nanoid(),
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        content: fileContent,
-      })
-    }
+    selectedFiles.value = await processFileAttachments(input.files)
   } catch (error) {
     console.error('Error processing files:', error)
   } finally {
     isFileProcessing.value = false
   }
-}
-
-// Read file as base64
-function readFileAsBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = reject
-
-    if (file.type.startsWith('image/')) {
-      reader.readAsDataURL(file) // Keep the data URL format for images
-    } else {
-      reader.readAsText(file)
-    }
-  })
 }
 
 // Remove a selected file
@@ -178,17 +114,22 @@ function removeFile(fileId: string) {
 
 // Handle new message submission
 async function handleNewMessage(message: Message) {
-  // Add file attachments if any
+  // Không cho phép gửi tin nhắn mới khi AI đang phản hồi
+  if (usersTyping.value.length > 0) return
+
+  // Thêm file đính kèm nếu có
   if (selectedFiles.value.length > 0) {
     message.fileAttachments = [...selectedFiles.value]
-    selectedFiles.value = [] // Clear selected files
+    selectedFiles.value = [] // Xóa file đã chọn
   }
 
-  // Add user message to chat
+  // Thêm tin nhắn người dùng vào chat
   messages.value.push(message)
+
+  // Đánh dấu bot đang phản hồi
   usersTyping.value.push(bot.value)
 
-  // Create placeholder for streaming response
+  // Tạo placeholder cho phản hồi dạng stream
   streamingMessage.value = {
     id: nanoid(),
     userId: bot.value.id,
@@ -197,7 +138,10 @@ async function handleNewMessage(message: Message) {
   }
 
   try {
-    // Fetch API response as stream
+    // Tạo AbortController mới cho request này
+    abortController.value = new AbortController()
+
+    // Fetch API response dạng stream
     const response = await fetch('/api/ai', {
       method: 'POST',
       headers: {
@@ -208,6 +152,7 @@ async function handleNewMessage(message: Message) {
         messages: messagesForApi.value,
         ...(props.agent && { agent: props.agent }),
       }),
+      signal: abortController.value.signal,
     })
 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
@@ -215,7 +160,7 @@ async function handleNewMessage(message: Message) {
     const reader = response.body?.getReader()
     if (!reader) throw new Error('No readable stream available')
 
-    // Process stream
+    // Xử lý stream
     const decoder = new TextDecoder()
     let buffer = ''
 
@@ -223,14 +168,59 @@ async function handleNewMessage(message: Message) {
       const { done, value } = await reader.read()
       if (done) break
 
-      buffer = processStreamChunk(buffer, decoder, value)
+      const { processedData, remainingBuffer } = processStreamChunk(buffer, decoder, value)
+      buffer = remainingBuffer
+
+      // Process all received data chunks
+      for (const data of processedData) {
+        const updatedMessage = processSSEData(data, streamingMessage.value)
+
+        // Update streaming message if needed
+        if (updatedMessage) {
+          if (data.type === 'complete') {
+            // Replace streaming message with final message
+            const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
+
+            if (index !== -1) {
+              messages.value[index] = updatedMessage
+            } else {
+              messages.value.push(updatedMessage)
+            }
+
+            streamingMessage.value = null
+            abortController.value = null
+          } else {
+            // Update streaming message with new content
+            streamingMessage.value = updatedMessage
+          }
+        }
+      }
     }
   } catch (error) {
-    console.error('Streaming request failed:', error)
+    // Xử lý lỗi request đang bị hủy
+    if (error.name === 'AbortError') {
+      // Đã xử lý ở hàm stopAIResponse
+      return
+    }
+
+    // Xử lý các lỗi khác
     if (streamingMessage.value) {
       streamingMessage.value.text = 'Error: Failed to connect to the AI service.'
+
+      // Hoàn thiện tin nhắn lỗi
+      const finalMessage = { ...streamingMessage.value }
+      const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
+
+      if (index !== -1) {
+        messages.value[index] = finalMessage
+      } else {
+        messages.value.push(finalMessage)
+      }
+
+      streamingMessage.value = null
     }
   } finally {
+    // Luôn xóa trạng thái typing khi hoàn thành
     usersTyping.value = []
   }
 }
@@ -240,6 +230,12 @@ function openFileSelector() {
   if (fileInputRef.value) {
     fileInputRef.value.click()
   }
+}
+
+// Function để cung cấp trực tiếp cho con để gọi thay vì dùng emit
+const handleStopAI = () => {
+  console.log('=== handleStopAI CALLED FROM DIRECT PROP ===')
+  stopAIResponse()
 }
 </script>
 <template>
@@ -254,25 +250,11 @@ function openFileSelector() {
       :usersTyping="usersTyping"
       @upload-file="openFileSelector"
       :is-file-processing="isFileProcessing"
+      :selectedFiles="selectedFiles"
+      @remove-file="removeFile"
+      @stop-ai-response="handleStopAI"
+      :stopAIFunction="handleStopAI"
     >
-      <template #before-messages>
-        <div
-          v-if="selectedFiles.length > 0"
-          class="selected-files p-2 bg-pink-100 rounded pixel-border border-2 border-black mx-2 my-2"
-        >
-          <p class="text-xs text-pink-700 mb-1">Đã tải lên file:</p>
-          <div class="flex flex-wrap gap-2">
-            <div
-              v-for="file in selectedFiles"
-              :key="file.id"
-              class="file-badge flex items-center bg-pink-200 px-2 py-1 rounded"
-            >
-              <span class="text-xs text-pink-700 truncate max-w-[150px]">{{ file.name }}</span>
-              <button @click="removeFile(file.id)" class="ml-2 text-pink-700 text-xs leading-none">×</button>
-            </div>
-          </div>
-        </div>
-      </template>
     </ChatBox>
   </div>
 </template>
@@ -280,9 +262,8 @@ function openFileSelector() {
 <style scoped>
 .chat-widget {
   height: 100%;
-}
-
-.selected-files {
-  image-rendering: pixelated;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 </style>

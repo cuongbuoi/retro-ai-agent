@@ -200,11 +200,14 @@ function formatFileSize(size: number): string {
 
 :deep(p) {
   @apply my-3;
+  font-size: 16px;
   line-height: 1.5;
 }
 
 :deep(li) {
   @apply my-2;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 :deep(strong) {

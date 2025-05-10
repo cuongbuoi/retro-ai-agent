@@ -1,9 +1,10 @@
 <script setup>
+import { AGENTS } from '~/constants/agents'
 const selectedAgent = ref('frontendDeveloperAgent')
 </script>
 
 <template>
-  <div class="min-h-screen w-screen flex flex-col">
+  <div class="h-screen w-screen flex flex-col overflow-hidden">
     <div class="pixel-header py-2 bg-pink-600 border-b-4 border-black">
       <div class="flex items-center justify-center flex-col">
         <div class="flex items-center justify-center">
@@ -17,16 +18,16 @@ const selectedAgent = ref('frontendDeveloperAgent')
               v-model="selectedAgent"
               class="pixel-select px-3 py-1 border-4 border-black bg-white rounded-none text-lg font-pixel cursor-pointer"
             >
-              <option value="frontendDeveloperAgent">Frontend Developer</option>
-              <option value="backendDeveloperAgent">Backend Developer</option>
-              <option value="productManagerAgent">Product Manager</option>
+              <option v-for="agent in AGENTS" :key="agent.id" :value="agent.id">
+                {{ agent.name }}
+              </option>
             </select>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="flex-1 flex">
+    <div class="flex-1 flex overflow-hidden">
       <ChatWidget class="flex-1 flex flex-col" :agent="selectedAgent" />
     </div>
   </div>

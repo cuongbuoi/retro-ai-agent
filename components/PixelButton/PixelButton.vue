@@ -1,6 +1,11 @@
 <template>
   <div class="pixel-button-wrapper" :class="[size]">
-    <button :class="['pixel-button', colorClass]" @click="$emit('click')" :type="type">
+    <button
+      :class="['pixel-button', colorClass, { disabled: disabled }]"
+      @click="handleClick"
+      :type="type"
+      :disabled="disabled"
+    >
       <div class="button-text">{{ text }}</div>
     </button>
   </div>
@@ -27,9 +32,19 @@ const props = defineProps({
     type: String,
     default: 'default',
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-defineEmits(['click'])
+const emit = defineEmits(['click'])
+
+const handleClick = (event: MouseEvent) => {
+  if (!props.disabled) {
+    emit('click', event)
+  }
+}
 
 const colorClass = computed(() => {
   return `color-${props.color}`
@@ -74,6 +89,26 @@ const colorClass = computed(() => {
   image-rendering: pixelated;
   min-width: 80px;
   text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Disabled state styles */
+.pixel-button.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+}
+
+.pixel-button.disabled:active {
+  transform: none;
+  box-shadow: inherit;
+}
+
+.pixel-button-wrapper:hover .pixel-button.disabled {
+  transform: none;
+}
+
+.pixel-button-wrapper:active .pixel-button.disabled {
+  transform: none;
 }
 
 /* Specific button sizes */

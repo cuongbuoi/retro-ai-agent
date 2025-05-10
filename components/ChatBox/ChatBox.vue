@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { nanoid } from 'nanoid'
-import type { Message, User } from '@/types'
+import type { Message, User, FileAttachment } from '@/types'
 import PixelButton from '@/components/PixelButton/PixelButton.vue'
+import { adjustTextareaHeight } from '@/utils'
 
 const props = withDefaults(
   defineProps<{
@@ -10,16 +11,22 @@ const props = withDefaults(
     me: User
     usersTyping?: User[]
     isFileProcessing?: boolean
+    selectedFiles?: FileAttachment[]
+    stopAIFunction?: () => void
   }>(),
   {
     usersTyping: () => [] as User[],
     isFileProcessing: false,
+    selectedFiles: () => [] as FileAttachment[],
+    stopAIFunction: undefined,
   },
 )
 
 const emit = defineEmits<{
   (e: 'newMessage', payload: Message): void
   (e: 'uploadFile'): void
+  (e: 'removeFile', fileId: string): void
+  (e: 'stopAIResponse'): void
 }>()
 
 function getUser(id: string) {
@@ -29,7 +36,15 @@ function getUser(id: string) {
 const textArea = ref()
 const messageBox = ref()
 
+// Check if AI is currently responding
+const isAIResponding = computed(() => props.usersTyping.length > 0)
+
+// Override sendMessage to check isAIResponding first
 const sendMessage = () => {
+  if (isAIResponding.value) {
+    return
+  }
+
   const text = textArea.value.value.trim()
   textArea.value.value = text
   if (text) {
@@ -49,22 +64,40 @@ const handleUploadClick = () => {
   emit('uploadFile')
 }
 
-const adjustTextareaHeight = () => {
-  const textarea = textArea.value
-  if (!textarea) return
+// Handle stop AI response button click
+const handleStopAIResponse = () => {
+  if (!isAIResponding.value) return
 
-  // Reset height to auto to get the correct scrollHeight
-  textarea.style.height = 'auto'
+  // Hiệu ứng khi nhấn nút
+  const stopButton = document.querySelector('.stop-button')
+  if (stopButton) {
+    stopButton.classList.add('opacity-50', 'cursor-not-allowed')
+  }
 
-  // Set the height to match content (scrollHeight) up to max height
-  const maxHeight = 150 // maximum height in pixels
-  const newHeight = Math.min(textarea.scrollHeight, maxHeight)
-  textarea.style.height = `${newHeight}px`
+  // Ưu tiên dùng function trực tiếp nếu có
+  if (props.stopAIFunction) {
+    props.stopAIFunction()
+  } else {
+    emit('stopAIResponse')
+  }
+
+  // Trả lại trạng thái nút sau một khoảng thời gian ngắn
+  setTimeout(() => {
+    if (stopButton) {
+      stopButton.classList.remove('opacity-50', 'cursor-not-allowed')
+    }
+  }, 500)
 }
 
-// Handle textarea input to adjust height
+// Track textarea height changes to adjust file panel position
+const textareaHeight = ref(52) // Initial minimum height
+
 const onTextareaInput = () => {
-  adjustTextareaHeight()
+  if (!textArea.value) return
+  const newHeight = adjustTextareaHeight(textArea.value, 150)
+  if (newHeight) {
+    textareaHeight.value = newHeight
+  }
 }
 
 // Handle Enter key to send message, Shift+Enter for new line
@@ -85,7 +118,7 @@ const scrollToBottom = () => {
 }
 
 onMounted(() => {
-  adjustTextareaHeight()
+  onTextareaInput()
   scrollToBottom()
 })
 
@@ -104,10 +137,19 @@ watch(
     scrollToBottom()
   },
 )
+
+// Nút dừng từ khẩn cấp hoặc trong status bar
+const directStopAI = () => {
+  if (props.stopAIFunction) {
+    props.stopAIFunction()
+  } else {
+    emit('stopAIResponse')
+  }
+}
 </script>
 
 <template>
-  <div class="h-full w-full flex flex-col">
+  <div class="h-full w-full flex flex-col overflow-hidden">
     <div class="flex flex-col h-full w-full font-['SVN-Retron'] pixel-chat-container">
       <!-- Header -->
       <header
@@ -165,10 +207,49 @@ watch(
         </div>
       </div>
 
+      <!-- File Attachments Panel - Floating above footer -->
+      <div
+        v-if="selectedFiles.length > 0"
+        :style="`bottom: ${textareaHeight + 18}px`"
+        class="file-attachments-panel sticky w-full z-10"
+      >
+        <div class="selected-files p-2 bg-pink-100 rounded pixel-border border-2 border-black mx-3 mb-0 shadow-lg">
+          <div class="flex items-center justify-between mb-1">
+            <p class="text-xs text-pink-700">Đã tải lên file:</p>
+            <span class="text-xs text-pink-500 font-bold">{{ selectedFiles.length }} file</span>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <div
+              v-for="file in selectedFiles"
+              :key="file.id"
+              class="file-badge flex items-center bg-pink-200 px-2 py-1 rounded"
+            >
+              <span class="text-xs text-pink-700 truncate max-w-[150px]">{{ file.name }}</span>
+              <button
+                @click="emit('removeFile', file.id)"
+                class="ml-2 text-pink-700 text-xs leading-none hover:text-pink-900"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Footer - sticky at bottom -->
       <footer class="p-3 bg-pink-200 pixel-border border-t-4 border-black sticky bottom-0 z-10">
         <div class="h-5 text-xs text-pink-700 mb-1">
-          <span v-if="usersTyping.length">
+          <span v-if="isAIResponding">
+            {{ usersTyping.map((user) => user.name).join(' và ') }} đang nhập tin nhắn...
+            <span class="text-xs text-red-600 ml-1">
+              (Bấm
+              <button @click="directStopAI" class="underline text-red-700 hover:text-red-900 transition-colors">
+                dừng
+              </button>
+              để nhập câu hỏi mới)
+            </span>
+          </span>
+          <span v-else-if="usersTyping.length">
             {{ usersTyping.map((user) => user.name).join(' và ') }} đang nhập tin nhắn...
           </span>
           <span v-else-if="isFileProcessing"> Đang xử lý file... </span>
@@ -182,39 +263,70 @@ watch(
               rows="1"
               @input="onTextareaInput"
               @keydown="onTextareaKeydown"
+              :disabled="isAIResponding"
+              :class="{ 'opacity-70 bg-pink-100': isAIResponding }"
             ></textarea>
             <div class="flex gap-4 flex-shrink-0 items-center">
-              <button
-                type="button"
-                @click="handleUploadClick"
-                class="upload-button w-12 h-12 flex items-center justify-center bg-pink-300 hover:bg-pink-400 transition-colors pixel-border border-4 border-black"
-                title="Upload file"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="square"
-                  stroke-linejoin="arcs"
-                  class="text-pink-800"
+              <transition name="fade" mode="out-in">
+                <button
+                  v-if="!isAIResponding"
+                  type="button"
+                  @click="handleUploadClick"
+                  class="upload-button w-12 h-12 flex items-center justify-center bg-pink-300 hover:bg-pink-400 transition-colors pixel-border border-4 border-black"
+                  title="Upload file"
                 >
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="square"
+                    stroke-linejoin="arcs"
+                    class="text-pink-800"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                </button>
+
+                <button
+                  v-else
+                  type="button"
+                  @click="handleStopAIResponse"
+                  class="stop-button relative w-12 h-12 flex items-center justify-center bg-red-400 hover:bg-red-500 transition-colors pixel-border border-4 border-black"
+                  title="Dừng trả lời"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="square"
+                    stroke-linejoin="arcs"
+                    class="text-white relative z-10"
+                  >
+                    <rect x="6" y="6" width="12" height="12" />
+                  </svg>
+                  <div class="absolute inset-0 border-4 border-red-500 animate-ping opacity-30 rounded-none"></div>
+                </button>
+              </transition>
+
               <div class="send-button-container">
                 <PixelButton
-                  text="Gửi"
-                  color="pink"
+                  :text="isAIResponding ? 'Đợi...' : 'Gửi'"
+                  :color="isAIResponding ? 'emerald' : 'pink'"
                   size="chat"
-                  @click="sendMessage"
+                  @click="!isAIResponding && sendMessage()"
                   type="submit"
                   class="send-button"
+                  :disabled="isAIResponding"
                 />
               </div>
             </div>
@@ -270,6 +382,8 @@ watch(
   -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .messages::-webkit-scrollbar {
@@ -316,5 +430,121 @@ textarea::-webkit-scrollbar-thumb {
 
 .upload-button {
   image-rendering: pixelated;
+}
+
+.file-attachments-panel {
+  background-color: rgba(252, 231, 243, 0.95);
+  box-shadow: 0 -4px 0 rgba(0, 0, 0, 0.1);
+  image-rendering: pixelated;
+  transition: all 0.3s ease;
+  animation: slide-up 0.3s ease;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.selected-files {
+  image-rendering: pixelated;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(2px);
+}
+
+.file-badge {
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.file-badge:hover {
+  background-color: #f8b4d9;
+}
+
+.stop-button {
+  image-rendering: pixelated;
+  position: relative;
+  overflow: hidden;
+}
+
+.stop-button:active {
+  transform: translateY(2px);
+}
+
+.stop-button:hover {
+  background-color: #f87171;
+}
+
+.stop-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.8);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 50% 50%;
+}
+
+.stop-button:active::after {
+  opacity: 1;
+  animation: ripple 0.4s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0) translate(-50%, -50%);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20) translate(-50%, -50%);
+    opacity: 0;
+  }
+}
+
+.emergency-stop-button {
+  font-family: 'SVN-Retron', monospace;
+  image-rendering: pixelated;
+  border: 4px solid black;
+  animation: pulse-emergency 1.5s infinite;
+  transition: all 0.2s ease;
+  font-size: 18px;
+}
+
+.emergency-stop-button:active {
+  transform: scale(0.95);
+}
+
+@keyframes pulse-emergency {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+/* Transition animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
 }
 </style>
