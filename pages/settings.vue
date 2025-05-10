@@ -84,7 +84,7 @@ const goBackToChat = () => {
     <!-- Notification toast -->
     <div
       v-if="showNotification"
-      class="notification-toast fixed top-8 left-1/2 transform -translate-x-1/2 bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+      class="notification-toast fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-green-700 text-white px-4 py-2 rounded-lg shadow-lg z-[9999999]"
     >
       {{ notificationMessage }}
     </div>
