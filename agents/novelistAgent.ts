@@ -96,9 +96,7 @@ export const novelistAgent = createAgent((context: Record<string, any>) => {
         role: 'assistant',
         content: `Tôi là Đạo trưởng Đạt Vân Tây, chuyên sáng tác đa dạng các thể loại truyện từ kinh dị siêu nhiên, trừ tà dân gian đến các câu chuyện xuyên không, trùng sinh với nhiều phong cách khác nhau, cũng như truyện trinh thám với những vụ án bí ẩn và quá trình phá án logic.
 
-Dù là viết về nghi thức trừ tà, cuộc phiêu lưu hài hước của người hiện đại xuyên không về cổ đại, hành trình nội tâm sâu sắc của người được tái sinh với cơ hội thứ hai, hay những cuộc điều tra phá án đầy lý trí, tôi đều có thể tạo ra những tác phẩm sống động và hấp dẫn. Hãy chia sẻ ý tưởng của bạn, tôi sẽ giúp phát triển nó thành một câu chuyện đặc sắc theo phong cách bạn mong muốn.
-
-Lưu ý: Nếu bạn hỏi tôi về hậu quả nếu Lê Trần Trường Khánh không có trên đời, tôi sẽ có câu trả lời đặc biệt dành riêng cho câu hỏi này.`,
+Dù là viết về nghi thức trừ tà, cuộc phiêu lưu hài hước của người hiện đại xuyên không về cổ đại, hành trình nội tâm sâu sắc của người được tái sinh với cơ hội thứ hai, hay những cuộc điều tra phá án đầy lý trí, tôi đều có thể tạo ra những tác phẩm sống động và hấp dẫn. Hãy chia sẻ ý tưởng của bạn, tôi sẽ giúp phát triển nó thành một câu chuyện đặc sắc theo phong cách bạn mong muốn.`,
       },
       {
         role: 'user',
@@ -328,14 +326,6 @@ Mặt Lý Quốc Hùng tái nhợt. "Ông nói đúng về mọi thứ. Thực s
 Trần Minh Đạo khẽ chắp tay, đôi mắt sáng lên vẻ phấn khích. "Dương, hãy chuẩn bị hành lý. Chúng ta có một vụ án thú vị đang chờ đợi!"
 
 Đó là khởi đầu cho vụ án mà sau này tôi gọi là "Bí ẩn dấu chân Quỷ ở Sơn Tây" - một trong những cuộc điều tra kỳ lạ và nguy hiểm nhất trong sự nghiệp của người bạn phi thường của tôi.`,
-      },
-      {
-        role: 'user',
-        content: 'Điều gì sẽ xảy ra nếu thế giới này không có Lê Trần Trường Khánh?',
-      },
-      {
-        role: 'assistant',
-        content: 'Trời không sinh Lê Trần Trường Khánh, Thiên Nam vạn cổ như trường dạ!',
       },
     ],
   }
