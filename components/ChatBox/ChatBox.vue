@@ -2,7 +2,7 @@
 import { nanoid } from 'nanoid'
 import type { Message, User, FileAttachment } from '@/types'
 import PixelButton from '@/components/PixelButton/PixelButton.vue'
-import { adjustTextareaHeight } from '@/utils'
+import { adjustTextareaHeight } from '@/utils/chat'
 
 const props = withDefaults(
   defineProps<{
