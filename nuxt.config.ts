@@ -30,10 +30,6 @@ export default defineNuxtConfig({
     ],
   },
   routeRules: {
-    // API routes must use SSR even with client-side app
-    '/api/**': {
-      ssr: true,
-    },
     '/examples/*': { redirect: '/redirect-route' },
     '/modify-headers-route': { headers: { 'x-magic-of': 'nuxt and vercel' } },
     // Enables client-side rendering

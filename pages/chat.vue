@@ -44,9 +44,23 @@
 import { ref } from 'vue'
 import { useAgentStore } from '~/stores/agent'
 import { PATHS } from '~/constants/routes'
+import AgentSelectorModal from '~/components/AgentSelectorModal/AgentSelectorModal.vue'
 
 definePageMeta({
   layout: 'chat',
+})
+
+// Define head metadata for the chat page
+useHead({
+  title: 'Chat - Retro AI Assistant',
+  meta: [
+    { name: 'description', content: 'Chat with AI-powered retro-style agents that can assist you with various tasks.' },
+    { name: 'og:title', content: 'Chat with Retro AI Assistant' },
+    { name: 'og:description', content: 'Interact with AI agents in a nostalgic pixel art interface' },
+    { name: 'og:type', content: 'website' },
+    { name: 'og:image', content: '/images/logo.png' },
+    { name: 'twitter:card', content: 'summary' },
+  ],
 })
 
 const agentStore = useAgentStore()
