@@ -80,7 +80,8 @@
     "select_agent": "Select Agent",
     "close": "Close",
     "back_to_home": "Back to Home",
-    "settings": "Settings"
+    "settings": "Settings",
+    "sent": "Sent"
   },
   "header": {
     "title": "Retro AI Agent Assistant",
