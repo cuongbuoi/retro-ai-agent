@@ -195,7 +195,6 @@ const directStopAI = () => {
             :user="getUser(message.userId)"
             :my-message="message.userId === me.id"
           />
-
           <ChatBubble v-for="user in usersTyping" :key="user.id" :user="user">
             <AppLoading />
           </ChatBubble>
@@ -281,7 +280,7 @@ const directStopAI = () => {
                     stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="square"
-                    stroke-linejoin="arcs"
+                    stroke-linejoin="round"
                     class="text-pink-800"
                   >
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -306,7 +305,7 @@ const directStopAI = () => {
                     stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="square"
-                    stroke-linejoin="arcs"
+                    stroke-linejoin="round"
                     class="text-white relative z-10"
                   >
                     <rect x="6" y="6" width="12" height="12" />

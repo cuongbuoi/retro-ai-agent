@@ -17,6 +17,7 @@ This is a flexible AI assistant platform to support multiple specialized AI agen
 5. Create a `.env` file in the root directory with the following content:
    ```
    NUXT_GEMINI_API_KEY=your_gemini_api_key_here
+   NUXT_API_URL=http://localhost:3033
    ```
 6. Run the development server
    ```bash
@@ -114,6 +115,9 @@ This project is configured for easy deployment on Vercel. Follow these steps to 
 Make sure to set these environment variables in your Vercel project settings:
 
 - `NUXT_GEMINI_API_KEY`: Your Google Gemini API key
+- `NUXT_API_URL`: The URL for the API server (default: http://localhost:3033)
+- `NUXT_SEARCH_API_KEY`: (Optional) Your Google Search API key for Deep Research feature
+- `NUXT_SEARCH_ENGINE_ID`: (Optional) Your Google Custom Search Engine ID for Deep Research feature
 
 ### Build Settings
 

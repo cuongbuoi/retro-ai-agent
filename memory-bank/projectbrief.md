@@ -49,8 +49,10 @@ The application has successfully implemented:
 
 - Core chat functionality with streaming responses
 - Retro-styled UI with pixel art aesthetic
-- Three specialized AI agents with different domains
+- Multiple specialized AI agents with different domains
 - File upload and analysis capability
 - Enhanced Vietnamese localization with cultural adaptations
 - Responsive design for different screen sizes
 - Deployment configuration for Vercel and Netlify
+- Client-side architecture with direct API integrations
+- API key management through client-side storage

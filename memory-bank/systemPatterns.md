@@ -2,13 +2,12 @@
 
 ## Overall Architecture
 
-The application follows a client-server architecture using Nuxt.js as the framework. The frontend is built with Vue 3 and TypeScript, with TailwindCSS for styling. The backend is a minimal Nuxt API server that handles communication with external AI services.
+The application follows a client-side architecture using Nuxt.js as the framework. The frontend is built with Vue 3 and TypeScript, with TailwindCSS for styling. The application directly communicates with external API services without a server intermediary.
 
 ```mermaid
 flowchart TB
-    Client[Client Browser] <--> NuxtServer[Nuxt Server]
-    NuxtServer <--> AIService[Google Gemini API]
-    NuxtServer <--> SearchAPI[Google Custom Search API]
+    Client[Client Browser] --> GeminiAPI[Google Gemini API]
+    Client --> SearchAPI[Google Custom Search API]
 ```
 
 ## Component Architecture
@@ -22,6 +21,7 @@ flowchart TB
     ChatBox --> ChatBubble[ChatBubble.vue]
     ChatBox --> PixelButton[PixelButton.vue]
     App --> DeepResearchFeature[DeepResearchFeature.vue]
+    App --> Settings[Settings.vue]
 ```
 
 - **App.vue**: Main application container
@@ -30,35 +30,30 @@ flowchart TB
 - **ChatBubble.vue**: Individual message display
 - **PixelButton.vue**: Reusable button component with pixel styling
 - **DeepResearchFeature.vue**: Promotional component for Deep Research capability
+- **Settings.vue**: Interface for managing API keys and preferences
 
 ## Agent System
 
-The application uses a flexible agent system that allows for different AI personalities and specializations.
+The application uses an agent selection system that allows for different AI personalities and specializations. Agent definitions are stored in the constants/agents.ts file.
 
 ```mermaid
 flowchart LR
-    AgentIndex[agents/index.ts] --> Agent1[frontendDeveloperAgent.ts]
-    AgentIndex --> Agent2[debuggingAgent.ts]
-    AgentIndex --> Agent3[backendDeveloperAgent.ts]
-    AgentIndex --> Agent4[deepResearchAgent.ts]
+    AgentsTS[constants/agents.ts] --> AgentSelectors[Agent Selection UI]
+    AgentSelectors --> ChatWidget[ChatWidget.vue]
+    ChatWidget --> APIRequest[API Request with Agent ID]
 ```
 
-Agents are defined with customizable system prompts and can be selected at runtime, allowing the application to serve different use cases with the same core functionality.
+Each agent has a unique ID, name, and description, which are used to customize the UI and prompt sent to the AI service.
 
 ## API Communication Pattern
 
-The application uses a streaming Server-Sent Events (SSE) pattern for real-time updates.
+The application uses a streaming Server-Sent Events (SSE) pattern for real-time updates directly from the external API services.
 
 ```mermaid
 sequenceDiagram
-    Client->>Server: POST /api/ai (with message payload)
-    Server->>AI Service: Generate streaming response
-    loop For each token
-        AI Service->>Server: Stream token
-        Server->>Client: SSE event with token
-        Client->>Client: Update UI in real-time
-    end
-    Server->>Client: Complete event
+    Client->>Gemini API: POST request with message payload
+    Gemini API->>Client: Stream tokens via SSE
+    Client->>Client: Update UI in real-time
 ```
 
 This pattern provides a responsive user experience with immediate feedback as the AI generates its response.
@@ -69,26 +64,22 @@ For the Deep Research feature, the application implements a web search pattern t
 
 ```mermaid
 sequenceDiagram
-    Client->>Server: POST /api/ai (with agent=deepResearchAgent)
-    Server->>SearchAPI: Perform web search (Google Custom Search)
-    Server->>Client: SSE event (search in progress)
-    SearchAPI->>Server: Return search results
-    Server->>Client: SSE event (search complete)
-    Server->>AI Service: Generate response with search results
-    loop For each token
-        AI Service->>Server: Stream token
-        Server->>Client: SSE event with token
-    end
-    Server->>Client: Complete event
+    Client->>Search API: Perform web search (Google Custom Search)
+    Client->>Client: Update UI (search in progress)
+    Search API->>Client: Return search results
+    Client->>Client: Update UI (search complete)
+    Client->>Gemini API: Generate response with search results
+    Gemini API->>Client: Stream response tokens
 ```
 
 Key characteristics of this pattern:
 
-1. Web search is performed server-side via Google Custom Search API
-2. Search progress is streamed to the client in real-time
+1. Web search is performed directly via Google Custom Search API
+2. Search progress is shown in the client UI in real-time
 3. Search results are formatted and added to the AI prompt
 4. The entire process maintains the streaming nature of the application
 5. Status messages provide transparency during the search process
+6. API keys are managed securely in client-side storage
 
 ## Localization Pattern
 

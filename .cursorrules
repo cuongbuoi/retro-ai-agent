@@ -5,6 +5,7 @@
 - Always read the Memory Bank files before starting any task
 - Memory Bank files are located in the memory-bank/ directory
 - The project is a Nuxt.js application with TypeScript and Vue 3
+- The application uses a client-side architecture with direct API calls
 
 # Coding Standards
 
@@ -16,9 +17,9 @@
 # Agent System
 
 - Each agent should have a consistent personality
-- Keep agent prompts in their respective files in the agents/ directory
+- Agent definitions are managed in constants/agents.ts
 - Follow the existing format when adding new agents
-- Register new agents in agents/index.ts
+- Each agent has an id, nameKey, and descriptionKey
 
 # UI Components
 
@@ -29,10 +30,11 @@
 
 # API Integration
 
-- Keep API keys secure in environment variables
+- Use client-side API key management via the apiKeys store
 - Handle errors gracefully
 - Implement proper loading states
 - Use streaming responses where appropriate
+- Secure API keys using client-side storage
 
 # Testing
 

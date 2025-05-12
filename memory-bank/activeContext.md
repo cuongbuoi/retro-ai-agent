@@ -2,7 +2,20 @@
 
 ## Current Focus
 
-We are enhancing the chat application's capabilities by adding file upload and analysis functionality while also improving the Vietnamese localization. This allows users to share files with the AI assistant for analysis and interpretation, expanding the usefulness of the application beyond text-based interactions.
+We are continuing to enhance the chat application's capabilities following the significant restructuring where server-side components have been removed. The application is now entirely client-side, with simulated AI responses instead of actual API calls to a server.
+
+### Major Change Status: Server-side Components Removed
+
+The application has been restructured by removing server-side components and the agent system:
+
+1. The entire `server/` directory and related API endpoints have been removed
+2. The `agents/` directory and all agent implementation files have been removed
+3. The constants/agents.ts file has been simplified to a minimal structure
+4. The ChatWidget has been modified to use client-side API calls instead of server communication
+5. Search functionality has been adapted to work with client-side API key management
+6. The useChatAi composable which was no longer needed has been removed
+
+This change makes the application entirely client-side, with direct API calls to external services instead of through a local server. Any AI integrations are now implemented directly in the client-side code, with API keys managed through client-side storage.
 
 The main components have been implemented, including:
 
@@ -109,6 +122,12 @@ The Deep Research feature integrates with the existing app through:
   - Developed streaming search experience with real-time updates
   - Added a dedicated UI component to promote the Deep Research feature
   - Integrated search results into AI prompts for better context
+- Refactored API integration:
+  - Added configurable NUXT_API_URL environment variable (default: http://localhost:3033)
+  - Updated fetch calls to use the configured API URL
+  - Modified fetchWithTimeout utility to prepend API_URL to relative paths
+  - Added API_URL to public runtimeConfig section to make it accessible on the client side
+  - Updated documentation to include the new configuration parameter
 
 ## Next Steps
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Message, User, FileAttachment } from '@/types'
 import { nanoid } from 'nanoid'
-import { processSSEData, processStreamChunk, processFileAttachments, readFileAsBase64 } from '@/utils'
+import { processSSEData, processStreamChunk, processFileAttachments } from '@/utils/chat'
 import { useI18n } from 'vue-i18n'
 import { useApiKeysStore } from '~/stores/apiKeys'
 
@@ -149,8 +149,10 @@ async function handleNewMessage(message: Message) {
     // Tạo AbortController mới cho request này
     abortController.value = new AbortController()
 
+    // Get runtime config
+    const config = useRuntimeConfig()
     // Fetch API response dạng stream
-    const response = await fetch('/api/ai', {
+    const response = await fetch(`${config.public.API_URL}/api/ai`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -201,6 +203,7 @@ async function handleNewMessage(message: Message) {
 
             streamingMessage.value = null
             abortController.value = null
+            usersTyping.value = [] // Reset users typing when complete type is received
           } else {
             // Update streaming message with new content
             streamingMessage.value = updatedMessage
@@ -210,7 +213,7 @@ async function handleNewMessage(message: Message) {
     }
   } catch (error) {
     // Xử lý lỗi request đang bị hủy
-    if (error.name === 'AbortError') {
+    if ((error as Error).name === 'AbortError') {
       // Đã xử lý ở hàm stopAIResponse
       return
     }
@@ -237,7 +240,6 @@ async function handleNewMessage(message: Message) {
   }
 }
 
-// Trigger file input click
 function openFileSelector() {
   if (fileInputRef.value) {
     fileInputRef.value.click()
@@ -258,16 +260,15 @@ const handleStopAI = () => {
       :me="me"
       :users="users"
       :messages="streamingMessage ? [...messages, streamingMessage] : messages"
-      @new-message="handleNewMessage"
       :usersTyping="usersTyping"
-      @upload-file="openFileSelector"
       :is-file-processing="isFileProcessing"
       :selectedFiles="selectedFiles"
+      :stopAIFunction="handleStopAI"
+      @new-message="handleNewMessage"
+      @upload-file="openFileSelector"
       @remove-file="removeFile"
       @stop-ai-response="handleStopAI"
-      :stopAIFunction="handleStopAI"
-    >
-    </ChatBox>
+    />
   </div>
 </template>
 
