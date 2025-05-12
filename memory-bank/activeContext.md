@@ -129,6 +129,35 @@ The Deep Research feature integrates with the existing app through:
   - Added API_URL to public runtimeConfig section to make it accessible on the client side
   - Updated documentation to include the new configuration parameter
 
+### API Services Implementation (Repository Pattern)
+
+We've implemented a structured approach to API services using the Repository pattern:
+
+1. Created `services/` directory with the following structure:
+
+   - `HttpClient.ts`: Base HTTP client for all API requests
+   - `ai/AIChatRepository.ts`: AI chat streaming repository
+   - `search/WebSearchRepository.ts`: Web search repository
+   - `index.ts`: Exports all services and factory functions
+
+2. Added type definitions:
+
+   - `types/api.ts`: Request/response interfaces for API endpoints
+   - `types/repository.ts`: Repository pattern interfaces
+
+3. Created composables for easy usage in components:
+
+   - `composables/useServices.ts`: `useAIChat()` and `useWebSearch()`
+
+4. Updated `ChatWidget.vue` to use the new services implementation
+
+This implementation:
+
+- Follows the repository pattern for better organization
+- Uses the NUXT_API_URL environment variable for the base URL
+- Provides type safety with interfaces for requests and responses
+- Offers composables for convenient use in Vue components
+
 ## Next Steps
 
 The following items are prioritized for upcoming work:

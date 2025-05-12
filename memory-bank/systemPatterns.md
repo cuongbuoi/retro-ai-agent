@@ -58,6 +58,34 @@ sequenceDiagram
 
 This pattern provides a responsive user experience with immediate feedback as the AI generates its response.
 
+## Repository Pattern for API Services
+
+The application implements the Repository pattern for organizing API services and ensuring separation of concerns:
+
+```mermaid
+flowchart TB
+    Components[Vue Components] --> Composables[Composables]
+    Composables --> Repositories[Repository Classes]
+    Repositories --> HttpClient[HttpClient]
+    HttpClient --> ExternalAPI[External APIs]
+```
+
+Key characteristics of this pattern:
+
+1. **Service Interfaces**: Each service implements either `Repository<T, R>` or `StreamingRepository<T, R>` interfaces
+2. **Request/Response Types**: Each service has clearly defined request and response interfaces in `types/api.ts`
+3. **HttpClient**: A central client for making HTTP requests, handling common concerns like base URL and error handling
+4. **Composables**: Vue composables that wrap repositories with reactive state for easy component integration
+5. **Factory Functions**: Helper functions for creating repository instances
+
+Benefits:
+
+- Improved code organization and maintainability
+- Clear separation of concerns between data access and UI logic
+- Consistent error handling across API calls
+- Typed request and response objects for better type safety
+- Easier testing through abstraction layers
+
 ## Web Search Pattern
 
 For the Deep Research feature, the application implements a web search pattern that enriches AI responses with real-time information.
