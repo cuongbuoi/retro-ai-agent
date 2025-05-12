@@ -238,12 +238,6 @@ const directStopAI = () => {
         <div class="h-5 text-xs text-pink-700 mb-1">
           <span v-if="isAIResponding">
             {{ usersTyping.map((user) => user.name).join(' và ') }} {{ $t('chat.typing') }}
-            <span class="text-xs text-red-600 ml-1">
-              ({{ $t('chat.stop_hint') }}
-              <button @click="directStopAI" class="underline text-red-700 hover:text-red-900 transition-colors">
-                {{ $t('chat.stop') }}</button
-              >)
-            </span>
           </span>
           <span v-else-if="usersTyping.length">
             {{ usersTyping.map((user) => user.name).join(' và ') }} {{ $t('chat.typing') }}

@@ -28,12 +28,13 @@ const apiKeys = reactive({
 // Status message for API keys
 const keyStatus = reactive({
   gemini: computed(() => {
-    if (!apiKeys.geminiApiKey) return { text: t('settings.api_key_status.using_env'), color: 'text-yellow-400' }
+    if (!apiKeys.geminiApiKey)
+      return { text: t('settings.api_key_status.using_server_default'), color: 'text-yellow-400' }
     return { text: t('settings.api_key_status.key_saved'), color: 'text-green-400' }
   }),
   search: computed(() => {
     if (!apiKeys.searchApiKey || !apiKeys.searchEngineId) {
-      return { text: t('settings.api_key_status.search_using_env'), color: 'text-yellow-400' }
+      return { text: t('settings.api_key_status.search_using_server_default'), color: 'text-yellow-400' }
     }
     return { text: t('settings.api_key_status.search_saved'), color: 'text-green-400' }
   }),

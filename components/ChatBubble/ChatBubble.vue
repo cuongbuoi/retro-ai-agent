@@ -42,6 +42,24 @@ function formatFileSize(size: number): string {
       }"
     >
       <slot>
+        <!-- Search indicator -->
+        <div v-if="message?.isSearching" class="search-indicator mb-2 flex items-center text-xs">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            class="mr-1 animate-pulse"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="animate-pulse">{{ $t('chat.searching') }}</span>
+        </div>
+
         <ClientOnly>
           <VMarkdownView :content="message?.text" class="!bg-transparent w-full" />
           <template #fallback>
@@ -221,5 +239,29 @@ function formatFileSize(size: number): string {
 
 :deep(.chat-bubble-end) .markdown-body p {
   @apply text-white;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.search-indicator {
+  padding: 4px 8px;
+  background: rgba(244, 114, 182, 0.1);
+  border-radius: 4px;
+  border: 1px dashed #f472b6;
+  display: inline-flex;
+  align-items: center;
+  font-weight: bold;
 }
 </style>

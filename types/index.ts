@@ -9,6 +9,7 @@ export interface Message {
   createdAt: Date
   text: string
   fileAttachments?: FileAttachment[]
+  isSearching?: boolean
 }
 export interface FileAttachment {
   id: string

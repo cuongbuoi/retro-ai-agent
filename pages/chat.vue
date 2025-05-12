@@ -17,7 +17,16 @@
             <h1 class="pixel-title text-2xl text-center !mb-1">Retro AI Assistant</h1>
           </div>
         </div>
-        <div class="w-10 h-10"><!-- Empty div for balance --></div>
+        <div class="flex items-center">
+          <NuxtLink :to="localePath({ name: PATHS.SETTINGS.name })" class="flex items-center">
+            <div
+              class="flex items-center justify-center bg-white rounded-md border-2 border-black text-pink-600 text-xs font-bold px-2 py-1"
+            >
+              <span class="mr-1">⚙️</span>
+              {{ $t('chat.settings') }}
+            </div>
+          </NuxtLink>
+        </div>
       </div>
       <div class="flex items-center gap-2 justify-center mt-1">
         <div class="text-white text-sm">{{ t('chat.select_agent') }}</div>
