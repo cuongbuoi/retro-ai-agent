@@ -5,7 +5,7 @@ import { processFileAttachments } from '@/utils/chat'
 import { useI18n } from 'vue-i18n'
 import { useApiKeysStore } from '~/stores/apiKeys'
 import { useAIChat } from '~/composables/useAIChat'
-import type { AIChatRequest } from '~/types/api'
+import type { AIChatRequest } from '~/services/ai/ai-chat.service'
 
 // Props
 const props = defineProps<{
