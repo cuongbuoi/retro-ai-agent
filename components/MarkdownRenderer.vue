@@ -4,8 +4,10 @@ import { onMounted, nextTick, watch, ref } from 'vue'
 import Prism from 'prismjs'
 
 // Import Prism CSS themes
+import 'prismjs/themes/prism.css'
 import 'prismjs/themes/prism-okaidia.css' // Monokai-like theme
-// Import additional languages
+
+// Import additional languages in correct order
 import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-typescript'
@@ -19,7 +21,10 @@ import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-csharp'
 import 'prismjs/components/prism-c'
 import 'prismjs/components/prism-cpp'
+// Required dependency for PHP
+import 'prismjs/components/prism-markup-templating'
 import 'prismjs/components/prism-php'
+// Vue syntax highlighting
 import 'prismjs/components/prism-ruby'
 import 'prismjs/components/prism-go'
 import 'prismjs/components/prism-rust'
@@ -28,7 +33,6 @@ import 'prismjs/components/prism-yaml'
 import 'prismjs/components/prism-markdown'
 import 'prismjs/components/prism-graphql'
 import 'prismjs/components/prism-docker'
-import 'prismjs/components/prism-bash'
 import 'prismjs/components/prism-diff'
 import 'prismjs/components/prism-kotlin'
 import 'prismjs/components/prism-swift'
@@ -38,6 +42,36 @@ import 'prismjs/plugins/toolbar/prism-toolbar.css'
 import 'prismjs/plugins/toolbar/prism-toolbar'
 import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard'
 import 'prismjs/plugins/show-language/prism-show-language'
+
+// Define Vue language syntax highlighting
+// Sử dụng phương pháp an toàn hơn với TypeScript
+;(Prism.languages as any).vue = Prism.languages.extend('markup', {})
+
+// Sử dụng cách tiếp cận an toàn hơn cho TypeScript
+const vueLang = (Prism.languages as any).vue
+if (vueLang && vueLang.tag && vueLang.tag.inside) {
+  const attrValue = vueLang.tag.inside['attr-value']
+  if (attrValue && attrValue.inside) {
+    attrValue.inside.entity = (Prism.languages.markup as any).entity
+    Object.assign(attrValue.inside, Prism.languages.javascript)
+  }
+}
+
+// Add tokens from CSS
+;(Prism.languages as any).vue.style = {
+  pattern: /(<style[\s\S]*?>)[\s\S]*?(?=<\/style>)/i,
+  lookbehind: true,
+  inside: Prism.languages.css,
+  alias: 'language-css',
+}
+
+// Add tokens from JavaScript for script tags
+;(Prism.languages as any).vue.script = {
+  pattern: /(<script[\s\S]*?>)[\s\S]*?(?=<\/script>)/i,
+  lookbehind: true,
+  inside: Prism.languages.javascript,
+  alias: 'language-javascript',
+}
 
 const props = defineProps<{
   content: string
@@ -60,7 +94,6 @@ const highlightCode = () => {
           pre.className = `language-${language}`
         }
       })
-
       // Trigger Prism highlighting
       Prism.highlightAllUnder(container.value)
     }
@@ -209,11 +242,12 @@ watch(
 }
 
 :deep(code:not([class*='language-'])) {
-  padding: 0.2em 0.4em;
+  padding: 0 0.4em;
   margin: 0;
-  font-size: 16px;
-  background-color: rgba(175, 184, 193, 0.2);
-  border-radius: 3px;
+  font-size: 13px;
+  background-color: #ffffff;
+  border: 1px solid #272822;
+  border-radius: 5px;
 }
 
 /* Style the copy button and toolbar */
