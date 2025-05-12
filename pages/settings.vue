@@ -5,6 +5,19 @@ const { t, locale, locales, setLocale } = useI18n()
 const router = useRouter()
 const apiKeysStore = useApiKeysStore()
 
+// Define head metadata for the settings page
+useHead({
+  title: 'Settings - Retro AI Assistant',
+  meta: [
+    { name: 'description', content: 'Configure your Retro AI Assistant settings, API keys, and language preferences.' },
+    { name: 'og:title', content: 'Settings - Retro AI Assistant' },
+    { name: 'og:description', content: 'Configure your AI assistant settings and preferences' },
+    { name: 'og:type', content: 'website' },
+    { name: 'og:image', content: '/images/logo.png' },
+    { name: 'twitter:card', content: 'summary' },
+  ],
+})
+
 // API key form data
 const apiKeys = reactive({
   geminiApiKey: apiKeysStore.geminiApiKey || '',
@@ -15,12 +28,13 @@ const apiKeys = reactive({
 // Status message for API keys
 const keyStatus = reactive({
   gemini: computed(() => {
-    if (!apiKeys.geminiApiKey) return { text: t('settings.api_key_status.using_env'), color: 'text-yellow-400' }
+    if (!apiKeys.geminiApiKey)
+      return { text: t('settings.api_key_status.using_server_default'), color: 'text-yellow-400' }
     return { text: t('settings.api_key_status.key_saved'), color: 'text-green-400' }
   }),
   search: computed(() => {
     if (!apiKeys.searchApiKey || !apiKeys.searchEngineId) {
-      return { text: t('settings.api_key_status.search_using_env'), color: 'text-yellow-400' }
+      return { text: t('settings.api_key_status.search_using_server_default'), color: 'text-yellow-400' }
     }
     return { text: t('settings.api_key_status.search_saved'), color: 'text-green-400' }
   }),

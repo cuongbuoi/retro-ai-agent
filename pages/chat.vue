@@ -17,7 +17,16 @@
             <h1 class="pixel-title text-2xl text-center !mb-1">Retro AI Assistant</h1>
           </div>
         </div>
-        <div class="w-10 h-10"><!-- Empty div for balance --></div>
+        <div class="flex items-center">
+          <NuxtLink :to="localePath({ name: PATHS.SETTINGS.name })" class="flex items-center">
+            <div
+              class="flex items-center justify-center bg-white rounded-md border-2 border-black text-pink-600 text-xs font-bold px-2 py-1"
+            >
+              <span class="mr-1">⚙️</span>
+              {{ $t('chat.settings') }}
+            </div>
+          </NuxtLink>
+        </div>
       </div>
       <div class="flex items-center gap-2 justify-center mt-1">
         <div class="text-white text-sm">{{ t('chat.select_agent') }}</div>
@@ -44,9 +53,23 @@
 import { ref } from 'vue'
 import { useAgentStore } from '~/stores/agent'
 import { PATHS } from '~/constants/routes'
+import AgentSelectorModal from '~/components/AgentSelectorModal/AgentSelectorModal.vue'
 
 definePageMeta({
   layout: 'chat',
+})
+
+// Define head metadata for the chat page
+useHead({
+  title: 'Chat - Retro AI Assistant',
+  meta: [
+    { name: 'description', content: 'Chat with AI-powered retro-style agents that can assist you with various tasks.' },
+    { name: 'og:title', content: 'Chat with Retro AI Assistant' },
+    { name: 'og:description', content: 'Interact with AI agents in a nostalgic pixel art interface' },
+    { name: 'og:type', content: 'website' },
+    { name: 'og:image', content: '/images/logo.png' },
+    { name: 'twitter:card', content: 'summary' },
+  ],
 })
 
 const agentStore = useAgentStore()

@@ -21,8 +21,10 @@
     "get_search_engine_id": "Set up a Custom Search Engine from Google Programmable Search Engine",
     "api_key_status": {
       "using_env": "No API key set, will use key from .env",
+      "using_server_default": "No API key set, will use default from server",
       "key_saved": "API key saved",
       "search_using_env": "No Search API key or Engine ID set, will use from .env",
+      "search_using_server_default": "No Search API key or Engine ID set, will use default from server",
       "search_saved": "Search API key and Engine ID saved"
     },
     "api_errors": {
@@ -66,6 +68,7 @@
     "uploaded_files": "Uploaded files:",
     "file": "file",
     "typing": "is typing...",
+    "searching": "Searching the web...",
     "stop_hint": "Click stop to ask a new question",
     "stop": "stop",
     "stop_response": "Stop response",
@@ -76,7 +79,9 @@
     "response_stopped": "[Response stopped]",
     "select_agent": "Select Agent",
     "close": "Close",
-    "back_to_home": "Back to Home"
+    "back_to_home": "Back to Home",
+    "settings": "Settings",
+    "sent": "Sent"
   },
   "header": {
     "title": "Retro AI Agent Assistant",

@@ -30,10 +30,6 @@ export default defineNuxtConfig({
     ],
   },
   routeRules: {
-    // API routes must use SSR even with client-side app
-    '/api/**': {
-      ssr: true,
-    },
     '/examples/*': { redirect: '/redirect-route' },
     '/modify-headers-route': { headers: { 'x-magic-of': 'nuxt and vercel' } },
     // Enables client-side rendering
@@ -46,6 +42,9 @@ export default defineNuxtConfig({
     GEMINI_API_KEY: process.env.NUXT_GEMINI_API_KEY, // Using API key from .env file
     SEARCH_API_KEY: process.env.NUXT_SEARCH_API_KEY, // Google Search API key
     SEARCH_ENGINE_ID: process.env.NUXT_SEARCH_ENGINE_ID, // Google Custom Search Engine ID
+    public: {
+      API_URL: process.env.NUXT_API_URL || 'http://localhost:3033',
+    },
   },
   app: {
     head: {

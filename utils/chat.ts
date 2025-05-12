@@ -18,6 +18,16 @@ export function processSSEData(data: any, streamingMessage: Message | null) {
       }
       break
 
+    case 'search':
+      if (streamingMessage) {
+        // Add isSearching flag to the streaming message
+        return {
+          ...streamingMessage,
+          isSearching: true,
+        }
+      }
+      break
+
     case 'complete':
       if (data.message?.choices?.[0]?.message) {
         return {
@@ -25,6 +35,7 @@ export function processSSEData(data: any, streamingMessage: Message | null) {
           userId: 'assistant',
           createdAt: new Date(),
           text: data.message.choices[0].message.content,
+          isSearching: false,
         }
       }
       break
@@ -33,7 +44,7 @@ export function processSSEData(data: any, streamingMessage: Message | null) {
       console.error('Streaming error:', data.error)
       if (streamingMessage) {
         streamingMessage.text += `\n\nError: ${data.error}`
-        return { ...streamingMessage }
+        return { ...streamingMessage, isSearching: false }
       }
       break
   }

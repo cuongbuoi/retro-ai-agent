@@ -37,6 +37,10 @@
 <script setup lang="ts">
 import { AGENTS } from '~/constants/agents'
 import { PATHS } from '~/constants/routes'
+import { useWebSearch } from '~/composables/useWebSearch'
+import { useApiKeysStore } from '~/stores/apiKeys'
+import { useI18n } from 'vue-i18n'
+import type { WebSearchRequest } from '~/types/api'
 
 const { t } = useI18n()
 

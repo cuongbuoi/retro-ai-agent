@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import type { Message, User, FileAttachment } from '@/types'
 import { nanoid } from 'nanoid'
-import { processSSEData, processStreamChunk, processFileAttachments, readFileAsBase64 } from '@/utils'
+import { processFileAttachments } from '@/utils/chat'
 import { useI18n } from 'vue-i18n'
 import { useApiKeysStore } from '~/stores/apiKeys'
+import { useAIChat } from '~/composables/useAIChat'
+import type { AIChatRequest } from '~/services/ai/ai-chat.service'
 
 // Props
 const props = defineProps<{
@@ -63,6 +65,9 @@ const messagesForApi = computed(() =>
     })
     .slice(-2),
 )
+
+// Initialize AI Chat service
+const { isLoading, error, sendMessage: sendAIChatMessage } = useAIChat()
 
 // Stop the AI response
 function stopAIResponse() {
@@ -149,95 +154,64 @@ async function handleNewMessage(message: Message) {
     // Tạo AbortController mới cho request này
     abortController.value = new AbortController()
 
-    // Fetch API response dạng stream
-    const response = await fetch('/api/ai', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'text/event-stream',
-      },
-      body: JSON.stringify({
-        messages: messagesForApi.value,
-        ...(props.agent && { agent: props.agent }),
-        // Add API keys from store if available
-        ...(apiKeysStore.geminiApiKey && { apiKey: apiKeysStore.geminiApiKey }),
-        ...(apiKeysStore.searchApiKey && { searchApiKey: apiKeysStore.searchApiKey }),
-        ...(apiKeysStore.searchEngineId && { searchEngineId: apiKeysStore.searchEngineId }),
-      }),
-      signal: abortController.value.signal,
-    })
+    // Create request payload
+    const request: AIChatRequest = {
+      messages: messagesForApi.value,
+      ...(props.agent && { agent: props.agent }),
+      // Add API keys from store if available
+      ...(apiKeysStore.geminiApiKey && { apiKey: apiKeysStore.geminiApiKey }),
+      ...(apiKeysStore.searchApiKey && { searchApiKey: apiKeysStore.searchApiKey }),
+      ...(apiKeysStore.searchEngineId && { searchEngineId: apiKeysStore.searchEngineId }),
+    }
 
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
-
-    const reader = response.body?.getReader()
-    if (!reader) throw new Error('No readable stream available')
-
-    // Xử lý stream
-    const decoder = new TextDecoder()
-    let buffer = ''
-
-    while (true) {
-      const { done, value } = await reader.read()
-      if (done) break
-
-      const { processedData, remainingBuffer } = processStreamChunk(buffer, decoder, value)
-      buffer = remainingBuffer
-
-      // Process all received data chunks
-      for (const data of processedData) {
-        const updatedMessage = processSSEData(data, streamingMessage.value)
-
-        // Update streaming message if needed
-        if (updatedMessage) {
-          if (data.type === 'complete') {
-            // Replace streaming message with final message
-            const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
-
-            if (index !== -1) {
-              messages.value[index] = updatedMessage
-            } else {
-              messages.value.push(updatedMessage)
-            }
-
-            streamingMessage.value = null
-            abortController.value = null
-          } else {
-            // Update streaming message with new content
-            streamingMessage.value = updatedMessage
-          }
+    // Use our service instead of direct fetch call
+    await sendAIChatMessage(
+      request,
+      streamingMessage.value,
+      abortController.value,
+      (updatedMessage) => {
+        // Update the streaming message with the latest content
+        if (streamingMessage.value) {
+          streamingMessage.value = updatedMessage
+        } else {
+          // If streaming is complete, add the message to the messages array
+          messages.value.push(updatedMessage)
         }
-      }
-    }
+      },
+      // Add onComplete callback to clear typing indicators
+      () => {
+        // Clear typing indicators
+        usersTyping.value = []
+
+        // Finalize the message if it exists
+        if (streamingMessage.value) {
+          // Add the final streaming message to the messages array
+          const finalMessage = { ...streamingMessage.value }
+          messages.value.push(finalMessage)
+          // Then clear the streaming message
+          streamingMessage.value = null
+        }
+      },
+    )
   } catch (error) {
-    // Xử lý lỗi request đang bị hủy
-    if (error.name === 'AbortError') {
-      // Đã xử lý ở hàm stopAIResponse
-      return
-    }
+    console.error('Error fetching AI response:', error)
 
-    // Xử lý các lỗi khác
+    // Show error message to the user
     if (streamingMessage.value) {
-      streamingMessage.value.text = 'Error: Failed to connect to the AI service.'
+      streamingMessage.value.text =
+        'Error: ' + (error instanceof Error ? error.message : 'Failed to connect to the AI service.')
 
-      // Hoàn thiện tin nhắn lỗi
-      const finalMessage = { ...streamingMessage.value }
-      const index = messages.value.findIndex((m) => streamingMessage.value && m.id === streamingMessage.value.id)
-
-      if (index !== -1) {
-        messages.value[index] = finalMessage
-      } else {
-        messages.value.push(finalMessage)
-      }
-
+      // Add the error message to chat history
+      const errorMessage = { ...streamingMessage.value }
+      messages.value.push(errorMessage)
       streamingMessage.value = null
     }
-  } finally {
-    // Luôn xóa trạng thái typing khi hoàn thành
+
+    // Make sure typing indicators are cleared
     usersTyping.value = []
   }
 }
 
-// Trigger file input click
 function openFileSelector() {
   if (fileInputRef.value) {
     fileInputRef.value.click()
@@ -258,16 +232,15 @@ const handleStopAI = () => {
       :me="me"
       :users="users"
       :messages="streamingMessage ? [...messages, streamingMessage] : messages"
-      @new-message="handleNewMessage"
       :usersTyping="usersTyping"
-      @upload-file="openFileSelector"
       :is-file-processing="isFileProcessing"
       :selectedFiles="selectedFiles"
+      :stopAIFunction="handleStopAI"
+      @new-message="handleNewMessage"
+      @upload-file="openFileSelector"
       @remove-file="removeFile"
       @stop-ai-response="handleStopAI"
-      :stopAIFunction="handleStopAI"
-    >
-    </ChatBox>
+    />
   </div>
 </template>
 

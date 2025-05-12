@@ -2,7 +2,7 @@
 import { nanoid } from 'nanoid'
 import type { Message, User, FileAttachment } from '@/types'
 import PixelButton from '@/components/PixelButton/PixelButton.vue'
-import { adjustTextareaHeight } from '@/utils'
+import { adjustTextareaHeight } from '@/utils/chat'
 
 const props = withDefaults(
   defineProps<{
@@ -195,7 +195,6 @@ const directStopAI = () => {
             :user="getUser(message.userId)"
             :my-message="message.userId === me.id"
           />
-
           <ChatBubble v-for="user in usersTyping" :key="user.id" :user="user">
             <AppLoading />
           </ChatBubble>
@@ -239,12 +238,6 @@ const directStopAI = () => {
         <div class="h-5 text-xs text-pink-700 mb-1">
           <span v-if="isAIResponding">
             {{ usersTyping.map((user) => user.name).join(' và ') }} {{ $t('chat.typing') }}
-            <span class="text-xs text-red-600 ml-1">
-              ({{ $t('chat.stop_hint') }}
-              <button @click="directStopAI" class="underline text-red-700 hover:text-red-900 transition-colors">
-                {{ $t('chat.stop') }}</button
-              >)
-            </span>
           </span>
           <span v-else-if="usersTyping.length">
             {{ usersTyping.map((user) => user.name).join(' và ') }} {{ $t('chat.typing') }}
@@ -281,7 +274,7 @@ const directStopAI = () => {
                     stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="square"
-                    stroke-linejoin="arcs"
+                    stroke-linejoin="round"
                     class="text-pink-800"
                   >
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -306,7 +299,7 @@ const directStopAI = () => {
                     stroke="currentColor"
                     stroke-width="2"
                     stroke-linecap="square"
-                    stroke-linejoin="arcs"
+                    stroke-linejoin="round"
                     class="text-white relative z-10"
                   >
                     <rect x="6" y="6" width="12" height="12" />

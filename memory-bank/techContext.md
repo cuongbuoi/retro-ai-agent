@@ -11,14 +11,14 @@
 - **vue3-markdown**: Markdown rendering component
 - **nanoid**: Unique ID generation
 - **FileReader API**: Used for client-side file reading and processing
+- **Pinia**: State management for Vue applications
+- **localStorage**: Client-side storage for API keys and preferences
 
-### Backend
+### API Services
 
-- **Edge Runtime**: For server-side streaming response handling
-- **Nuxt API Routes**: Server endpoints for AI communication
-- **Google Gemini API**: AI model service for generating responses
-- **Google Custom Search API**: Web search service for the Deep Research feature
-- **Server-Sent Events (SSE)**: Protocol for streaming real-time updates
+- **Google Gemini API**: AI model service for generating responses (direct client integration)
+- **Google Custom Search API**: Web search service for the Deep Research feature (direct client integration)
+- **Server-Sent Events (SSE)**: Protocol for streaming real-time updates from external APIs
 
 ### AI Services
 
@@ -36,36 +36,44 @@
 
 - Node.js (v18+)
 - npm or yarn
-- GEMINI_API_KEY from Google AI Studio
-- SEARCH_API_KEY and SEARCH_ENGINE_ID from Google Custom Search Console
+- GEMINI_API_KEY from Google AI Studio (can be entered in UI)
+- SEARCH_API_KEY and SEARCH_ENGINE_ID from Google Custom Search Console (can be entered in UI)
 
 ### Installation
 
 1. Clone the repository
 2. Install dependencies with `npm install` or `yarn`
-3. Copy `.env.example` to `.env` and add your GEMINI_API_KEY
-4. Add SEARCH_API_KEY and SEARCH_ENGINE_ID to your `.env` file
-5. Run the development server with `npm run dev`
+3. Run the development server with `npm run dev`
+4. Enter your API keys in the application settings or add them to your `.env` file
 
 ## Key Technical Decisions
 
-### 1. Streaming Responses
+### 1. Client-Side Architecture
+
+The application now uses a fully client-side architecture with direct API calls to external services:
+
+- Removed server-side components and API endpoints
+- API keys managed in client-side storage
+- Direct integration with Google Gemini and Search APIs
+- Simplified codebase with fewer moving parts
+
+### 2. Streaming Responses
 
 We use Server-Sent Events (SSE) for streaming AI responses in real-time, providing a responsive user experience without waiting for complete responses.
 
-### 2. Edge Runtime
+### 3. Edge Runtime
 
 The API routes use Vercel Edge Runtime for optimal handling of streaming responses, with fallbacks for other environments.
 
-### 3. Component Architecture
+### 4. Component Architecture
 
 We've adopted a modular component architecture with Vue 3's Composition API for better organization and reusability.
 
-### 4. Retro Styling
+### 5. Retro Styling
 
 The pixel art styling is implemented through CSS and TailwindCSS, with careful attention to maintaining consistent styling across all components.
 
-### 5. File Processing
+### 6. File Processing
 
 File handling is implemented on the client side to minimize server load:
 
@@ -74,7 +82,7 @@ File handling is implemented on the client side to minimize server load:
 - Client-side processing before sending to the API
 - Using the Gemini API's multimodal capabilities for processing images
 
-### 6. Localization Approach
+### 7. Localization Approach
 
 The application supports both English and Vietnamese with a hybrid approach:
 
@@ -83,7 +91,7 @@ The application supports both English and Vietnamese with a hybrid approach:
 - Cultural adaptation of UI elements and expressions
 - Plans for a more systematic i18n implementation in future releases
 
-### 7. Web Search Integration
+### 8. Web Search Integration
 
 The Deep Research feature integrates with Google Custom Search API:
 

@@ -21,8 +21,10 @@
     "get_search_engine_id": "Thiết lập Công cụ Tìm kiếm từ Google Programmable Search Engine",
     "api_key_status": {
       "using_env": "Chưa có API key, sẽ dùng key từ .env",
+      "using_server_default": "Chưa có API key, sẽ dùng key mặc định từ server",
       "key_saved": "Đã lưu API key",
       "search_using_env": "Chưa có API key hoặc Search Engine ID, sẽ dùng từ .env",
+      "search_using_server_default": "Chưa có API key hoặc Search Engine ID, sẽ dùng mặc định từ server",
       "search_saved": "Đã lưu API key và Search Engine ID"
     },
     "api_errors": {
@@ -66,6 +68,7 @@
     "uploaded_files": "Đã tải lên file:",
     "file": "file",
     "typing": "đang nhập tin nhắn...",
+    "searching": "Đang tìm kiếm trên web...",
     "stop_hint": "Bấm dừng để nhập câu hỏi mới",
     "stop": "dừng",
     "stop_response": "Dừng trả lời",
@@ -76,7 +79,9 @@
     "response_stopped": "[Đã dừng trả lời]",
     "select_agent": "Chọn Agent",
     "close": "Đóng",
-    "back_to_home": "Quay lại Home"
+    "back_to_home": "Quay lại Home",
+    "settings": "Cài đặt",
+    "sent": "Đã gửi"
   },
   "header": {
     "title": "Trợ lý AI Retro",

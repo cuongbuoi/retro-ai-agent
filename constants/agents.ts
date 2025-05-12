@@ -1,7 +1,7 @@
 export interface AgentDefinition {
   id: string
   nameKey: string
-  descriptionKey?: string
+  descriptionKey: string
 }
 
 export const AGENTS: AgentDefinition[] = [
