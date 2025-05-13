@@ -21,6 +21,7 @@ export interface AIChatRequest extends BaseRequest {
   apiKey?: string
   searchApiKey?: string
   searchEngineId?: string
+  model?: string
 }
 
 // AI Chat Response

@@ -10,6 +10,7 @@ import type { AIChatRequest } from '~/services/ai/ai-chat.service'
 // Props
 const props = defineProps<{
   agent?: string
+  model?: string
 }>()
 
 // Get i18n translations
@@ -158,6 +159,7 @@ async function handleNewMessage(message: Message) {
     const request: AIChatRequest = {
       messages: messagesForApi.value,
       ...(props.agent && { agent: props.agent }),
+      ...(props.model && { model: props.model }),
       // Add API keys from store if available
       ...(apiKeysStore.geminiApiKey && { apiKey: apiKeysStore.geminiApiKey }),
       ...(apiKeysStore.searchApiKey && { searchApiKey: apiKeysStore.searchApiKey }),

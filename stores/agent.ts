@@ -15,6 +15,10 @@ export const useAgentStore = defineStore('agent', {
       const agent = getAgentById(state.currentAgentId)
       return agent?.nameKey || AGENTS[0]?.nameKey
     },
+    currentAgentModel: (state) => {
+      const agent = getAgentById(state.currentAgentId)
+      return agent?.model || AGENTS[0]?.model
+    },
   },
   actions: {
     setCurrentAgent(agentId: string) {

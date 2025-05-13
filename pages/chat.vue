@@ -41,7 +41,11 @@
     </div>
 
     <div class="flex-1 flex overflow-hidden">
-      <ChatWidget class="flex-1 flex flex-col" :agent="agentStore.currentAgentId" />
+      <ChatWidget
+        class="flex-1 flex flex-col"
+        :agent="agentStore.currentAgentId"
+        :model="agentStore.currentAgentModel"
+      />
     </div>
 
     <!-- Use the AgentSelectorModal component -->
