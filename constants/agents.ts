@@ -34,7 +34,7 @@ export const AGENTS: AgentDefinition[] = [
     id: 'novelistAgent',
     nameKey: 'agents.novelistAgent',
     descriptionKey: 'agents.novelistAgentDesc',
-    model: 'gemini-2.5-flash-preview-04-17',
+    model: 'gemini-2.5-flash',
   },
 ]
 
